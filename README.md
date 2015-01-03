@@ -52,7 +52,9 @@ The loomlib rake tasks make the following assumptions about the layout of a proj
 
 Some file under `lib/` must contain the following line (where `1.2.3` is the version of your library):
 
-    public static const version:String = '1.2.3';
+```ls
+public static const version:String = '1.2.3';
+```
 
 This is used to name the loomlib that gets compiled (and anticipates a corresponding [GitHub release][gh-releases]).
 
@@ -93,12 +95,16 @@ Clone this repo.
 
 In your project's `Rakefile`, declare the name of your library and path to the file containing version info.
 
-    LIB_NAME = 'Foo'
-    LIB_VERSION_FILE = File.join('lib', 'src', 'com', 'bar', 'Foo.ls')
+```ruby
+LIB_NAME = 'Foo'
+LIB_VERSION_FILE = File.join('lib', 'src', 'com', 'bar', 'Foo.ls')
+```
 
 Then load the tasks:
 
-    load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib.rake'))
+```ruby
+load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib.rake'))
+```
 
 > Note: your whole Rakefile may be just those three lines if there isn't anything else you need to do
 
