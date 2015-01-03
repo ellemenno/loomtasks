@@ -1,10 +1,16 @@
 # encoding: utf-8
 
-require 'etc'
-require 'fileutils'
-require 'json'
+require File.join(File.dirname(__FILE__), 'lib', 'tasks', 'support')
+include LoomTasks
 
-@loom_config = nil
+
+def available_tasks_dir()
+  File.join(File.dirname(__FILE__), 'lib', 'tasks')
+end
+
+def installed_tasks_dir()
+  File.join(Dir.home, '.loom', 'tasks')
+end
 
 
 task :default => :list_targets
@@ -21,7 +27,7 @@ desc "installs rake tasks for Loom"
 task :install do |t, args|
   Dir.mkdir(installed_tasks_dir) unless Dir.exists?(installed_tasks_dir)
 
-  cmd = "cp lib/tasks/*.rake #{installed_tasks_dir}"
+  cmd = "cp lib/tasks/*.rake lib/tasks/*.rb #{installed_tasks_dir}"
   try(cmd, "failed to install tasks")
 
   puts "[#{t.name}] task completed, tasks installed to #{installed_tasks_dir}"
@@ -63,40 +69,3 @@ task :uninstall do |t, args|
   puts "[#{t.name}] task completed, #{installed_tasks_dir} was removed"
   puts ''
 end
-
-
-def config()
-  @loom_config || (@loom_config = JSON.parse(File.read(loom_config_file)))
-end
-
-def exec_with_echo(cmd)
-  puts(cmd)
-  stdout = %x[#{cmd}]
-  puts(stdout) unless stdout.empty?
-  $?.exitstatus
-end
-
-def fail(message)
-  abort("◈ #{message}")
-end
-
-def loom_config_file()
-  'loom.config'
-end
-
-def available_tasks_dir()
-  File.join(File.dirname(__FILE__), 'lib', 'tasks')
-end
-
-def installed_tasks_dir()
-  File.join(Dir.home, '.loom', 'tasks')
-end
-
-def try(cmd, failure_message)
-  fail(failure_message) if (exec_with_echo(cmd) != 0)
-end
-
-def write_loom_config(config)
-  File.open(loom_config_file, 'w') { |f| f.write(JSON.pretty_generate(config)) }
-end
-
