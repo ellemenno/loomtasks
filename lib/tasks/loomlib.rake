@@ -164,6 +164,7 @@ namespace :lib do
     ext = '.loomlib'
     release_dir = 'releases'
 
+    puts "[#{t.name}] updating README to reference version #{lib_version}"
     update_readme_version()
 
     Dir.mkdir(release_dir) unless Dir.exists?(release_dir)

@@ -22,7 +22,7 @@ task :list_targets do |t, args|
   puts ''
 end
 
-desc "installs rake tasks for Loom"
+desc "installs rake task files for Loom"
 task :install do |t, args|
   Dir.mkdir(installed_tasks_dir) unless Dir.exists?(installed_tasks_dir)
 
@@ -35,7 +35,7 @@ end
 
 namespace :list do
 
-  desc "lists tasks available to install"
+  desc "lists task files available to install"
   task :available do |t, args|
     if Dir.exists?(available_tasks_dir)
       cmd = "ls -1 #{available_tasks_dir}/"
@@ -47,7 +47,7 @@ namespace :list do
     puts ''
   end
 
-  desc "lists currently installed tasks"
+  desc "lists currently installed task files"
   task :installed do |t, args|
     if Dir.exists?(installed_tasks_dir)
       cmd = "ls -1 #{installed_tasks_dir}/"
