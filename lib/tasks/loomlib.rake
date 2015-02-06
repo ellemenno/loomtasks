@@ -8,8 +8,6 @@
 #
 #   load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib.rake'))
 
-LOOMLIB_VERSION = '1.0.0'
-
 require 'etc'
 require 'fileutils'
 require 'json'
@@ -81,7 +79,7 @@ task :list_targets => :check_consts do |t, args|
   d = "test=#{test_config['sdk_version']}"
   puts "#{a} #{b} (#{c}, #{d})"
   system("rake -T")
-  puts "(using #{File.basename(__FILE__)} v#{LOOMLIB_VERSION})"
+  puts "(using #{File.basename(__FILE__)} v#{LoomTasks::VERSION})"
   puts ''
 end
 

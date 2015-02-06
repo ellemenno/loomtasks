@@ -12,11 +12,10 @@ def installed_tasks_dir()
   File.join(Dir.home, '.loom', 'tasks')
 end
 
-
 task :default => :list_targets
 
 task :list_targets do |t, args|
-  a = "#{File.basename(File.dirname(__FILE__))} Rakefile"
+  a = "LoomTasks v#{VERSION} Rakefile"
   b = "running on Ruby #{RUBY_VERSION}"
   puts "#{a} #{b}"
   system("rake -T")

@@ -1,6 +1,8 @@
 
 module LoomTasks
 
+  VERSION = '1.0.1'
+
   EXIT_OK = 0
 
   def exec_with_echo(cmd)
