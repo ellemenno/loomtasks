@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # loomlib.rake - common Rake tasks for loomlib projects
