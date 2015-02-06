@@ -37,7 +37,11 @@ module LoomTasks
   end
 
   def lib_version()
-    File.open(lib_version_file, 'r') { |f| f.read.scan(lib_version_regex).first[0] }
+    File.open(lib_version_file, 'r') do |f|
+      matches = f.read.scan(lib_version_regex)
+      raise("No version const defined in #{lib_version_file}") if matches.empty?
+      matches.first[0]
+    end
   end
 
   def readme_version_regex()
