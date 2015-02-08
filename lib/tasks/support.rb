@@ -4,7 +4,7 @@ require 'rbconfig'
 
 module LoomTasks
 
-  VERSION = '1.0.1'
+  VERSION = '1.1.0'
 
   EXIT_OK = 0
 
@@ -19,12 +19,37 @@ module LoomTasks
     abort("✘ #{message}")
   end
 
-  def sdk_root()
-    File.join(Dir.home, '.loom', 'sdks')
-  end
-
   def try(cmd, failure_message)
     fail(failure_message) if (exec_with_echo(cmd) != EXIT_OK)
+  end
+
+  def loomexec(sdk_version)
+    "#{sdk_root}/#{sdk_version}/tools/loomexec"
+  end
+
+  def loomlaunch_win(sdk_version)
+    exe = File.join(sdk_root, sdk_version, 'bin', 'LoomDemo.exe')
+    %(start "Loom" #{exe} ProcessID #{Process.pid})
+  end
+
+  def loomlaunch_osx(sdk_version)
+    File.join(sdk_root, sdk_version, 'bin', 'LoomDemo.app', 'Contents', 'MacOS', 'LoomDemo')
+  end
+
+  def loomlaunch(sdk_version)
+    # needs to be run in the project root
+    # magically, the launcher loads bin/Main.loom from the current working directory
+    return loomlaunch_osx if osx?
+    return loomlaunch_win if windows?
+  end
+
+  def lsc(sdk_version)
+    # needs to be run in the project root
+    "#{sdk_root}/#{sdk_version}/tools/lsc"
+  end
+
+  def sdk_root()
+    File.join(Dir.home, '.loom', 'sdks')
   end
 
   def parse_loom_config(file)
