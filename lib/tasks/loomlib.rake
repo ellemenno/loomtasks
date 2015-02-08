@@ -101,7 +101,7 @@ file LIBRARY do |t, args|
 
   Dir.chdir('lib') do
     Dir.mkdir('build') unless Dir.exists?('build')
-    cmd = "#{sdk_root}/#{sdk_version}/tools/lsc #{const_lib_name}.build"
+    cmd = "#{lsc(sdk_version)} #{const_lib_name}.build"
     try(cmd, "failed to compile .loomlib")
   end
 
@@ -125,7 +125,7 @@ file APP => LIBRARY do |t, args|
 
   Dir.chdir('test') do
     Dir.mkdir('bin') unless Dir.exists?('bin')
-    cmd = "#{sdk_root}/#{sdk_version}/tools/lsc #{const_lib_name}Test.build"
+    cmd = "#{lsc(sdk_version)} #{const_lib_name}Test.build"
     try(cmd, "failed to compile .loom")
   end
 
@@ -228,7 +228,7 @@ namespace :test do
     puts "[#{t.name}] running #{t.prerequisites[0]}..."
 
     sdk_version = test_config['sdk_version']
-    cmd = "#{sdk_root}/#{sdk_version}/tools/loomexec test/bin/#{const_lib_name}Test.loom --format ansi"
+    cmd = "#{loomexec(sdk_version)} test/bin/#{const_lib_name}Test.loom --format ansi"
     try(cmd, "failed to run .loom")
 
     puts ''
@@ -239,7 +239,7 @@ namespace :test do
     puts "[#{t.name}] running #{t.prerequisites[0]}..."
 
     sdk_version = test_config['sdk_version']
-    cmd = "#{sdk_root}/#{sdk_version}/tools/loomexec test/bin/#{const_lib_name}Test.loom --format junit --format console"
+    cmd = "#{loomexec(sdk_version)} test/bin/#{const_lib_name}Test.loom --format junit --format console"
     try(cmd, "failed to run .loom")
 
     puts ''
