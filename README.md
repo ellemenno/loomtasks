@@ -31,6 +31,9 @@ The loomlib rake tasks make the following assumptions about the layout of a proj
 
 #### lib
 
+`lib/` is for the library code, which will be packaged into a `.loomlib` file for installation into a LoomSDK. <br>
+Support for test tasks comes from `loomlib.rake`.
+
     ├─lib
     │ ├─assets
     │ ├─bin
@@ -60,6 +63,9 @@ This is used to name the loomlib that gets compiled (and anticipates a correspon
 
 #### test
 
+`test/` is for unit tests of the library code. The tests are not packaged with the loomlib; they are run from a separate test runner app. <br>
+Support for test tasks comes from `loomlib.rake`.
+
     └─test
       ├─assets
       ├─bin
@@ -74,7 +80,7 @@ This is used to name the loomlib that gets compiled (and anticipates a correspon
 
 * the test application wil be built into `test/bin/`
 * the tests have their own loom config file at `test/loom.config`
-* the tests have their own loom build file at `test/src/Foo.build`
+* the tests have their own loom build file at `test/src/FooTest.build`
 * the test application source code is under `test/src/app/`
 * the specification source code is under `test/src/spec/`
 
