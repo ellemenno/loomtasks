@@ -181,12 +181,11 @@ namespace :lib do
 
   desc "installs #{const_lib_name}.loomlib into the SDK specified in lib/loom.config"
   task :install => LIBRARY do |t, args|
-    lib = "lib/build/#{const_lib_name}.loomlib"
     sdk_version = lib_config['sdk_version']
+    lib = "lib/build/#{const_lib_name}.loomlib"
     libs_path = "#{sdk_root}/#{sdk_version}/libs"
 
-    cmd = "cp #{lib} #{libs_path}"
-    try(cmd, "failed to install lib")
+    FileUtils.cp(lib, libs_path)
 
     puts "[#{t.name}] task completed, #{const_lib_name}.loomlib installed for #{sdk_version}"
     puts ''
@@ -198,8 +197,7 @@ namespace :lib do
     lib = "#{sdk_root}/#{sdk_version}/libs/#{const_lib_name}.loomlib"
 
     if (File.exists?(lib))
-      cmd = "rm -f #{lib}"
-      try(cmd, "failed to remove lib")
+      FileUtils.rm_r(lib)
       puts "[#{t.name}] task completed, #{const_lib_name}.loomlib removed from #{sdk_version}"
     else
       puts "[#{t.name}] nothing to do;  no #{const_lib_name}.loomlib found in #{sdk_version} sdk"
@@ -211,8 +209,9 @@ namespace :lib do
   task :show do |t, args|
     sdk_version = lib_config['sdk_version']
 
-    cmd = "ls -1 #{sdk_root}/#{sdk_version}/libs"
-    try(cmd, "failed to list contents of #{sdk_version} libs directory")
+    libs_dir = File.join(sdk_root, sdk_version, 'libs')
+    puts("installed libs in #{libs_dir}")
+    Dir.glob("#{libs_dir}/*").each { |f| puts(File.basename(f)) }
 
     puts ''
   end
