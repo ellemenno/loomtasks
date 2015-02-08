@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'rbconfig'
+
 module LoomTasks
 
   VERSION = '1.0.1'
@@ -58,6 +60,17 @@ module LoomTasks
       readme_file,
       File.open(readme_file, 'r') { |f| f.read.gsub!(readme_version_regex, readme_version_literal) }
     )
+  end
+
+  def windows?
+    return false if RUBY_PLATFORM =~ /cygwin/ # i386-cygwin
+    return true if ENV['OS'] == 'Windows_NT'
+    false
+  end
+
+  def osx?
+    return true if RUBY_PLATFORM =~ /darwin/
+    false
   end
 
 end
