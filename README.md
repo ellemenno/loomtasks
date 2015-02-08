@@ -78,6 +78,26 @@ This is used to name the loomlib that gets compiled (and anticipates a correspon
 * the test application source code is under `test/src/app/`
 * the specification source code is under `test/src/spec/`
 
+##### demo
+
+`demo/` is for a functional demonstration app. It may be GUI or commandline. <br>
+Support for demo tasks comes from `loomlib_demo.rake`.
+
+    └─test
+      ├─assets
+      ├─bin
+      │ └─FooTest.loom
+      ├─loom.config
+      └─src
+        ├─demo
+        │ └─FooDemo.ls
+        └─FooDemo.build
+
+* the demo application wil be built into `test/bin/`
+* the demo shares its loom config file with the test app at `test/loom.config`
+* the demo has its own loom build file at `test/src/FooDemo.build`
+* the demo source code is under `test/src/demo/`
+
 
 ## installation
 
@@ -104,9 +124,10 @@ Then load the tasks:
 
 ```ruby
 load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib.rake'))
+load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib_demo.rake')) # optional
 ```
 
-> Note: your whole Rakefile may be just those three lines if there isn't anything else you need to do
+> Note: your whole Rakefile may be just those three or four lines if there isn't anything else you need to do
 
 Now run `rake` to execute the default task, which will print the list of available tasks and some useful info:
 

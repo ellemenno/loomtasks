@@ -111,7 +111,11 @@ end
 
 APP = "test/bin/#{const_lib_name}Test.loom"
 
-FileList['test/src/**/*.ls'].each do |src|
+FileList['test/src/app/*.ls'].each do |src|
+  file APP => src
+end
+
+FileList['test/src/spec/*.ls'].each do |src|
   file APP => src
 end
 
