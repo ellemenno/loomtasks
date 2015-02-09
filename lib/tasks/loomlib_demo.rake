@@ -54,7 +54,7 @@ namespace :demo do
       abort("could not find '#{loomlib}'' to launch") unless File.exists?(loomlib)
 
       # loomlaunch expects to find Main.loom, so we make a launchable copy here
-      FileUtils.cp("bin/#{loomlib}", 'bin/Main.loom')
+      FileUtils.cp(loomlib, 'bin/Main.loom')
 
       cmd = loomlaunch(sdk_version)
       try(cmd, "failed to launch .loom")
