@@ -39,8 +39,8 @@ module LoomTasks
   def loomlaunch(sdk_version)
     # needs to be run in the project root
     # magically, the launcher loads bin/Main.loom from the current working directory
-    return loomlaunch_osx if osx?
-    return loomlaunch_win if windows?
+    return loomlaunch_osx(sdk_version) if osx?
+    return loomlaunch_win(sdk_version) if windows?
   end
 
   def lsc(sdk_version)
