@@ -37,13 +37,20 @@ end
 
 namespace :demo do
 
-  desc "builds #{const_lib_name}Demo.loom with the SDK specified in test/loom.config"
+  desc [
+    "builds #{const_lib_name}Demo.loom with the SDK specified in test/loom.config (#{test_config['sdk_version']})",
+    "you can change the SDK with rake set[sdk]",
+    "the .loom binary is created in test/bin",
+  ].join("\n")
   task :build => DEMO do |t, args|
     puts "[#{t.name}] task completed, find .loom in test/bin/"
     puts ''
   end
 
-  desc "launches #{const_lib_name}Demo.loom as a GUI app"
+  desc [
+    "launches #{const_lib_name}Demo.loom as a GUI app",
+    "use this launcher if your demo application class extends loom.Application",
+  ].join("\n")
   task :gui => DEMO do |t, args|
     puts "[#{t.name}] launching #{t.prerequisites[0]}..."
 
@@ -63,7 +70,10 @@ namespace :demo do
     puts ''
   end
 
-  desc "executes #{const_lib_name}Demo.loom as a commandline app, with options"
+  desc [
+    "executes #{const_lib_name}Demo.loom as a commandline app, with options",
+    "use this launcher if your demo application class extends system.application.ConsoleApplication",
+  ].join("\n")
   task :cli, [:options] => DEMO do |t, args|
     args.with_defaults(:options => '')
     puts "[#{t.name}] executing #{t.prerequisites[0]}..."
