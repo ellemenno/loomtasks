@@ -38,7 +38,8 @@ end
 namespace :demo do
 
   desc [
-    "builds #{const_lib_name}Demo.loom with the SDK specified in test/loom.config (#{test_config['sdk_version']})",
+    "builds #{const_lib_name}Demo.loom for #{test_config['sdk_version']} SDK",
+    "the SDK is specified in test/loom.config",
     "you can change the SDK with rake set[sdk]",
     "the .loom binary is created in test/bin",
   ].join("\n")

@@ -90,7 +90,7 @@ task :list_targets => :check_consts do |t, args|
   d = "test=#{test_config['sdk_version']}"
   puts "#{a} #{b} (#{c}, #{d})"
   system("rake -T")
-  puts "(using #{File.basename(__FILE__)} v#{LoomTasks::VERSION})"
+  puts "(using LoomTasks v#{LoomTasks::VERSION})"
   puts ''
   puts 'use `rake -D` for more detailed task descriptions'
   puts ''
@@ -173,7 +173,8 @@ end
 namespace :lib do
 
   desc [
-    "builds #{const_lib_name}.loomlib for the SDK specified in lib/loom.config (#{lib_config['sdk_version']})",
+    "builds #{const_lib_name}.loomlib for #{lib_config['sdk_version']} SDK",
+    "the SDK is specified in test/loom.config",
     "you can change the SDK with rake set[sdk]",
     "the .loomlib binary is created in lib/build",
   ].join("\n")
@@ -206,7 +207,7 @@ namespace :lib do
   end
 
   desc [
-    "installs #{const_lib_name}.loomlib into the SDK specified in lib/loom.config (#{lib_config['sdk_version']})",
+    "installs #{const_lib_name}.loomlib into #{lib_config['sdk_version']} SDK",
   ].join("\n")
   task :install => LIBRARY do |t, args|
     sdk_version = lib_config['sdk_version']
@@ -219,7 +220,7 @@ namespace :lib do
   end
 
   desc [
-    "removes #{const_lib_name}.loomlib from the SDK specified in lib/loom.config (#{lib_config['sdk_version']})",
+    "removes #{const_lib_name}.loomlib from #{lib_config['sdk_version']} SDK",
   ].join("\n")
   task :uninstall do |t, args|
     sdk_version = lib_config['sdk_version']
@@ -235,7 +236,8 @@ namespace :lib do
   end
 
   desc [
-    "lists libs installed for #{lib_config['sdk_version']} (the SDK specified in lib/loom.config)",
+    "lists libs installed for #{lib_config['sdk_version']} SDK",
+    "the SDK is specified in test/loom.config",
     "you can change the SDK with rake set[sdk]",
   ].join("\n")
   task :show do |t, args|
@@ -253,9 +255,10 @@ end
 namespace :test do
 
   desc [
-    "builds #{const_lib_name}Test.loom against the SDK specified in test/loom.config (#{test_config['sdk_version']})",
-    "the .loom binary is created in test/bin",
+    "builds #{const_lib_name}Test.loom against #{test_config['sdk_version']} SDK",
+    "the SDK is specified in test/loom.config",
     "you can change the SDK with rake set[sdk]",
+    "the .loom binary is created in test/bin",
   ].join("\n")
   task :build => APP do |t, args|
     puts "[#{t.name}] task completed, find .loom in test/bin/"
@@ -263,7 +266,7 @@ namespace :test do
   end
 
   desc [
-    "runs #{const_lib_name}Test.loom",
+    "runs #{const_lib_name}Test.loom for the console",
     "the test runner will print short-form results to stdout",
   ].join("\n")
   task :run => APP do |t, args|
