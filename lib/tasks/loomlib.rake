@@ -75,7 +75,7 @@ CLOBBER.include ['lib/build', 'test/bin', 'releases']
 Rake::Task[:clobber].enhance(['lib:uninstall'])
 Rake::Task[:clobber].clear_comments()
 Rake::Task[:clobber].add_description([
-  "removes all generated artifacts to restore project to clean checkout like state",
+  "removes all generated artifacts to restore project to checkout-like state",
   "uninstalls the library from the current lib sdk (#{lib_config['sdk_version']})",
   "removes the following folders:\n  #{CLOBBER.join("\n  ")}",
 ].join("\n"))
@@ -90,7 +90,7 @@ task :list_targets => :check_consts do |t, args|
   d = "test=#{test_config['sdk_version']}"
   puts "#{a} #{b} (#{c}, #{d})"
   system("rake -T")
-  puts "(using LoomTasks v#{LoomTasks::VERSION})"
+  puts "(using loomtasks v#{LoomTasks::VERSION})"
   puts ''
   puts 'use `rake -D` for more detailed task descriptions'
   puts ''
