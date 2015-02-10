@@ -295,3 +295,8 @@ namespace :test do
   end
 
 end
+
+desc [
+  "shorthand for rake test:run",
+].join("\n")
+task :test => 'test:run'
