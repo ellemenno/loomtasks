@@ -66,15 +66,19 @@ end
 
 CLEAN.include ['lib/build/**', 'test/bin/**']
 Rake::Task[:clean].clear_comments()
-Rake::Task[:clean].add_description("removes intermediate files to ensure a clean build")
-Rake::Task[:clean].add_description("running now would delete #{CLEAN.length} files:\n  #{CLEAN.join("\n  ")}")
+Rake::Task[:clean].add_description([
+  "removes intermediate files to ensure a clean build",
+  "running now would delete #{CLEAN.length} files:\n  #{CLEAN.join("\n  ")}",
+].join("\n"))
 
 CLOBBER.include ['lib/build', 'test/bin', 'releases']
 Rake::Task[:clobber].enhance(['lib:uninstall'])
 Rake::Task[:clobber].clear_comments()
-Rake::Task[:clobber].add_description("removes all generated artifacts to restore project to clean checkout like state")
-Rake::Task[:clobber].add_description("uninstalls the library from the current lib sdk (#{lib_config['sdk_version']})")
-Rake::Task[:clobber].add_description("removes the following folders:\n  #{CLOBBER.join("\n  ")}")
+Rake::Task[:clobber].add_description([
+  "removes all generated artifacts to restore project to clean checkout like state",
+  "uninstalls the library from the current lib sdk (#{lib_config['sdk_version']})",
+  "removes the following folders:\n  #{CLOBBER.join("\n  ")}",
+].join("\n"))
 
 
 task :default => :list_targets
