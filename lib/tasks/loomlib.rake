@@ -64,7 +64,7 @@ end
 @lib_loom_config = nil
 @test_loom_config = nil
 
-CLEAN.include ['lib/build/**', 'test/bin/**']
+CLEAN.include ['lib/build/**', 'test/bin/**', 'TEST-*.xml']
 Rake::Task[:clean].clear_comments()
 Rake::Task[:clean].add_description([
   "removes intermediate files to ensure a clean build",
