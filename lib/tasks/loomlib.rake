@@ -90,10 +90,6 @@ end
 
 LIBRARY = "lib/build/#{const_lib_name}.loomlib"
 
-FileList['lib/src/**/*.ls'].each do |src|
-  file LIBRARY => src
-end
-
 file LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
 
@@ -108,16 +104,12 @@ file LIBRARY do |t, args|
   puts ''
 end
 
+FileList['lib/src/**/*.ls'].each do |src|
+  file LIBRARY => src
+end
+
 
 APP = "test/bin/#{const_lib_name}Test.loom"
-
-FileList['test/src/app/*.ls'].each do |src|
-  file APP => src
-end
-
-FileList['test/src/spec/*.ls'].each do |src|
-  file APP => src
-end
 
 file APP => LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
@@ -134,6 +126,14 @@ file APP => LIBRARY do |t, args|
   end
 
   puts ''
+end
+
+FileList['test/src/app/*.ls'].each do |src|
+  file APP => src
+end
+
+FileList['test/src/spec/*.ls'].each do |src|
+  file APP => src
 end
 
 
