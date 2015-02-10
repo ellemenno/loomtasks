@@ -126,7 +126,7 @@ LIB_NAME = 'Foo'
 LIB_VERSION_FILE = File.join('lib', 'src', 'com', 'bar', 'Foo.ls')
 ```
 
-Then load the tasks:
+Then load the tasks you want to use:
 
 ```ruby
 load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib.rake'))
@@ -138,20 +138,36 @@ load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib_demo.rake')) # optional
 Now run `rake` to execute the default task, which will print the list of available tasks and some useful info:
 
     Foo v1.2.3 Rakefile running on Ruby 2.1.1 (lib=sprint33, test=sprint33)
-    rake clean          # Remove any temporary products
-    rake clobber        # Remove any generated file
-    rake lib:build      # builds Foo.loomlib for the SDK specified in lib/loom.config
-    rake lib:install    # installs Foo.loomlib into the SDK specified in lib/loom.config
-    rake lib:release    # prepares sdk-specific Foo.loomlib for release
-    rake lib:show       # lists libs installed for the SDK specified in lib/loom.config
-    rake lib:uninstall  # removes Foo.loomlib from the SDK specified in lib/loom.config
-    rake set[sdk]       # sets the provided SDK version into lib/loom.config and test/loom.config
-    rake test:build     # builds FooTest.loom with the SDK specified in test/loom.config
-    rake test:ci        # runs FooTest.loom for CI
-    rake test:run       # runs FooTest.loom
-    (using loomlib.rake v1.0.0)
+    rake clean              # removes intermediate files to ensure a clean build
+    rake clobber            # removes all generated artifacts to restore project to checkout-like state
+    rake demo:build         # builds FooDemo.loom for sprint33 SDK
+    rake demo:cli[options]  # executes FooDemo.loom as a commandline app, with options
+    rake demo:gui           # launches FooDemo.loom as a GUI app
+    rake lib:build          # builds Foo.loomlib for sprint33 SDK
+    rake lib:install        # installs Foo.loomlib into sprint33 SDK
+    rake lib:release        # prepares sdk-specific Foo.loomlib for release, and updates version in README
+    rake lib:show           # lists libs installed for sprint33 SDK
+    rake lib:uninstall      # removes Foo.loomlib from sprint33 SDK
+    rake set[sdk]           # sets the provided SDK version into lib/loom.config and test/loom.config
+    rake test               # shorthand for rake test:run
+    rake test:build         # builds FooTest.loom against sprint33 SDK
+    rake test:ci            # runs FooTest.loom for CI
+    rake test:run           # runs FooTest.loom for the console
+    (using loomtasks v1.1.0)
 
-The Rake tasks are defined with dependencies and modification triggers, so you can just run `rake test:run` every time you edit a source file, and the library and test app will be rebuilt as needed automatically.
+    use `rake -D` for more detailed task descriptions
+
+If you are looking for more detail on any of the tasks, use `rake -D`:
+
+```console
+$ rake -D set
+rake set[sdk]
+    sets the provided SDK version into lib/loom.config and test/loom.config
+    lib/loom.config defines which SDK will be used to compile the loomlib, and also where to install it
+    test/loom.config defines which SDK will be used to compile the test app and demo app
+```
+
+The Rake tasks are defined with dependencies and modification triggers, so you can just run `rake test` every time you edit a source file, and the library and test app will be rebuilt as needed automatically.
 
 
 ## contributing
