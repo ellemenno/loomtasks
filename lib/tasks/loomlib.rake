@@ -115,7 +115,7 @@ file APP => LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
 
   sdk_version = test_config['sdk_version']
-  file_installed = "#{sdk_root}/#{sdk_version}/libs/#{const_lib_name}.loomlib"
+  file_installed = File.join(libs_path(sdk_version), "#{const_lib_name}.loomlib")
 
   Rake::Task['lib:install'].invoke unless FileUtils.uptodate?(file_installed, [LIBRARY])
 
@@ -182,10 +182,9 @@ namespace :lib do
   desc "installs #{const_lib_name}.loomlib into the SDK specified in lib/loom.config"
   task :install => LIBRARY do |t, args|
     sdk_version = lib_config['sdk_version']
-    lib = "lib/build/#{const_lib_name}.loomlib"
-    libs_path = "#{sdk_root}/#{sdk_version}/libs"
+    lib = File.join('lib', 'build', "#{const_lib_name}.loomlib")
 
-    FileUtils.cp(lib, libs_path)
+    FileUtils.cp(lib, libs_path(sdk_version))
 
     puts "[#{t.name}] task completed, #{const_lib_name}.loomlib installed for #{sdk_version}"
     puts ''
@@ -194,7 +193,7 @@ namespace :lib do
   desc "removes #{const_lib_name}.loomlib from the SDK specified in lib/loom.config"
   task :uninstall do |t, args|
     sdk_version = lib_config['sdk_version']
-    lib = "#{sdk_root}/#{sdk_version}/libs/#{const_lib_name}.loomlib"
+    lib = File.join(libs_path(sdk_version), "#{const_lib_name}.loomlib")
 
     if (File.exists?(lib))
       FileUtils.rm_r(lib)

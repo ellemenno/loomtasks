@@ -24,7 +24,7 @@ module LoomTasks
   end
 
   def loomexec(sdk_version)
-    "#{sdk_root}/#{sdk_version}/tools/loomexec"
+    File.join(sdk_root, sdk_version, 'tools', 'loomexec')
   end
 
   def loomlaunch_win(sdk_version)
@@ -45,7 +45,7 @@ module LoomTasks
 
   def lsc(sdk_version)
     # needs to be run in the project root
-    "#{sdk_root}/#{sdk_version}/tools/lsc"
+    File.join(sdk_root, sdk_version, 'tools', 'lsc')
   end
 
   def sdk_root()
@@ -70,6 +70,10 @@ module LoomTasks
       raise("No version const defined in #{lib_version_file}") if matches.empty?
       matches.first[0]
     end
+  end
+
+  def libs_path(sdk_version)
+    File.join(sdk_root, sdk_version, 'libs')
   end
 
   def readme_version_regex()
