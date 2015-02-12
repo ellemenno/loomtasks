@@ -51,6 +51,7 @@ namespace :demo do
   desc [
     "launches #{const_lib_name}Demo.loom as a GUI app",
     "use this launcher if your demo application class extends loom.Application",
+    "if your demo is a cli app, remove this task from the list with Rake::Task['demo:gui'].clear",
   ].join("\n")
   task :gui => DEMO do |t, args|
     puts "[#{t.name}] launching #{t.prerequisites[0]}..."
@@ -77,6 +78,7 @@ namespace :demo do
   desc [
     "executes #{const_lib_name}Demo.loom as a commandline app, with options",
     "use this launcher if your demo application class extends system.application.ConsoleApplication",
+    "if your demo is a gui app, remove this task from the list with Rake::Task['demo:cli'].clear",
   ].join("\n")
   task :cli, [:options] => DEMO do |t, args|
     args.with_defaults(:options => '')
