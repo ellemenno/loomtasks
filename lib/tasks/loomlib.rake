@@ -208,6 +208,7 @@ namespace :lib do
 
   desc [
     "installs #{const_lib_name}.loomlib into #{lib_config['sdk_version']} SDK",
+    "this makes it available to reference in .build files of any project targeting #{lib_config['sdk_version']}",
   ].join("\n")
   task :install => LIBRARY do |t, args|
     sdk_version = lib_config['sdk_version']
