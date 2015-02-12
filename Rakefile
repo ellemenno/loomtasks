@@ -14,7 +14,7 @@ end
 task :default => :list_targets
 
 task :list_targets do |t, args|
-  a = "LoomTasks v#{VERSION} Rakefile"
+  a = "loomtasks v#{VERSION} Rakefile"
   b = "running on Ruby #{RUBY_VERSION}"
   puts "#{a} #{b}"
   system("rake -T")
