@@ -64,11 +64,14 @@ namespace :demo do
       # loomlaunch expects to find Main.loom, so we make a launchable copy here
       FileUtils.cp(loomlib, 'bin/Main.loom')
 
-      cmd = loomlaunch(sdk_version)
-      try(cmd, "failed to launch .loom")
+      # capture the interrupt signal from a quit app
+      begin
+        cmd = loomlaunch(sdk_version)
+        try(cmd, "failed to launch .loom")
+      rescue Exception => e
+        puts ' (quit)'
+      end
     end
-
-    puts ''
   end
 
   desc [
