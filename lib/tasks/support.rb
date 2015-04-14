@@ -61,7 +61,7 @@ module LoomTasks
   end
 
   def lib_version_regex()
-    Regexp.new(%q/^\s*public static const version:String = '(\d\.\d\.\d)';/)
+    Regexp.new(%q/^\s*public static const version:String = '(\d+\.\d+\.\d+)';/)
   end
 
   def lib_version()
@@ -77,7 +77,7 @@ module LoomTasks
   end
 
   def readme_version_regex()
-    Regexp.new(%q/download\/v(\d\.\d\.\d)/)
+    Regexp.new(%q/download\/v(\d+\.\d+\.\d+)/)
   end
 
   def readme_version_literal()
