@@ -33,6 +33,10 @@ def const_lib_version_file
   const_find('LIB_VERSION_FILE')
 end
 
+def lib_build_file()
+  File.join('lib', 'src', "#{const_lib_name}.build")
+end
+
 def lib_config_file()
   File.join('lib', 'loom.config')
 end
@@ -53,12 +57,20 @@ def lib_config()
   @lib_loom_config || (@lib_loom_config = parse_loom_config(lib_config_file))
 end
 
+def lib_build_config()
+  @lib_build_config || (@lib_build_config = parse_loom_config(lib_build_file))
+end
+
 def test_config()
   @test_loom_config || (@test_loom_config = parse_loom_config(test_config_file))
 end
 
 def write_lib_config(config)
   write_loom_config(lib_config_file, config)
+end
+
+def write_lib_build_config(config)
+  write_loom_config(lib_build_file, config)
 end
 
 def write_test_config(config)
@@ -175,6 +187,25 @@ task :set, [:sdk] => 'lib:uninstall' do |t, args|
   puts ''
 end
 
+desc [
+  "changes the library version number",
+  "this updates #{lib_build_file}",
+  "this updates #{lib_version_file}",
+].join("\n")
+task :version, [:v] do |t, args|
+  args.with_defaults(:v => '1.0.0')
+  lib_version = args.v
+
+  lib_build_config['version'] = lib_version
+  lib_build_config['modules'].first['version'] = lib_version
+
+  write_lib_build_config(lib_build_config)
+  update_lib_version(lib_version)
+
+  puts "[#{t.name}] task completed, lib version updated to #{lib_version}"
+  puts ''
+end
+
 namespace :lib do
 
   desc [
@@ -200,7 +231,7 @@ namespace :lib do
     release_dir = 'releases'
 
     puts "[#{t.name}] updating README to reference version #{lib_version}"
-    update_readme_version()
+    update_readme_version(lib_version)
 
     Dir.mkdir(release_dir) unless Dir.exists?(release_dir)
 

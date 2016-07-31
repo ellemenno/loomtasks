@@ -92,12 +92,24 @@ module LoomTasks
     Regexp.new(%q/^\s*public static const version:String = '(\d+\.\d+\.\d+)';/)
   end
 
+  def lib_version_literal(new_value)
+    "public static const version:String = '#{new_value}';"
+  end
+
   def lib_version()
     File.open(lib_version_file, 'r') do |f|
       matches = f.read.scan(lib_version_regex)
       raise("No version const defined in #{lib_version_file}") if matches.empty?
       matches.first[0]
     end
+  end
+
+  def update_lib_version(new_value)
+    old_value = lib_version # force the check for an existing version
+    IO.write(
+      lib_version_file,
+      File.open(lib_version_file, 'r') { |f| f.read.gsub!(lib_version_regex, lib_version_literal(new_value)) }
+    )
   end
 
   def libs_path(sdk_version)
@@ -108,14 +120,14 @@ module LoomTasks
     Regexp.new(%q/download\/v(\d+\.\d+\.\d+)/)
   end
 
-  def readme_version_literal()
-    "download/v#{lib_version}"
+  def readme_version_literal(new_value)
+    "download/v#{new_value}"
   end
 
-  def update_readme_version()
+  def update_readme_version(new_value)
     IO.write(
       readme_file,
-      File.open(readme_file, 'r') { |f| f.read.gsub!(readme_version_regex, readme_version_literal) }
+      File.open(readme_file, 'r') { |f| f.read.gsub!(readme_version_regex, readme_version_literal(new_value)) }
     )
   end
 
