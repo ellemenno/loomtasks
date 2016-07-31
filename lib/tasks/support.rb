@@ -24,16 +24,9 @@ module LoomTasks
   end
 
   def loomexec(sdk_version)
-    File.join(sdk_root, sdk_version, 'tools', 'loomexec')
-  end
-
-  def loomlaunch_win(sdk_version)
-    exe = File.join(sdk_root, sdk_version, 'bin', 'LoomDemo.exe')
-    %(start "Loom" #{exe} ProcessID #{Process.pid})
-  end
-
-  def loomlaunch_osx(sdk_version)
-    File.join(sdk_root, sdk_version, 'bin', 'LoomDemo.app', 'Contents', 'MacOS', 'LoomDemo')
+    # needs to be run in the project root
+    # stubbornly, the runner loads bin/Main.loom from the current working directory
+    File.join(sdk_tools(sdk_version), 'loomexec')
   end
 
   def loomlaunch(sdk_version)
@@ -43,13 +36,48 @@ module LoomTasks
     return loomlaunch_win(sdk_version) if windows?
   end
 
+  def loomlaunch_win(sdk_version)
+    exe = File.join(sdk_bin(sdk_version), 'LoomPlayer.exe')
+    %(start "Loom" #{exe} ProcessID #{Process.pid})
+  end
+
+  def loomlaunch_osx(sdk_version)
+    File.join(sdk_bin(sdk_version), 'LoomPlayer.app', 'Contents', 'MacOS', 'LoomPlayer')
+  end
+
   def lsc(sdk_version)
     # needs to be run in the project root
-    File.join(sdk_root, sdk_version, 'tools', 'lsc')
+    File.join(sdk_tools(sdk_version), 'lsc')
   end
 
   def sdk_root()
     File.join(Dir.home, '.loom', 'sdks')
+  end
+
+  def sdk_architecture()
+    os = 'unknown'
+    arch = 'x86'
+
+    if osx?
+      os = "osx"
+      arch = "x64" if (`uname -m`.chomp == 'x86_64')
+    elsif windows?
+      os = "windows"
+      arch = "x64" if (/\.*64.*/ =~ `reg query "HKLM\\System\\CurrentControlSet\\Control\\Session Manager\\Environment" /v PROCESSOR_ARCHITECTURE`)
+    elsif linux?
+      os = "linux"
+      arch = "x64" if (`uname -m`.chomp == 'x86_64')
+    end
+
+    "#{os}-#{arch}"
+  end
+
+  def sdk_bin(sdk_version)
+    File.join(sdk_root, sdk_version, 'bin', sdk_architecture, 'bin')
+  end
+
+  def sdk_tools(sdk_version)
+    File.join(sdk_root, sdk_version, 'bin', sdk_architecture, 'tools')
   end
 
   def parse_loom_config(file)
@@ -92,13 +120,17 @@ module LoomTasks
   end
 
   def windows?
-    return false if RUBY_PLATFORM =~ /cygwin/ # i386-cygwin
-    return true if ENV['OS'] == 'Windows_NT'
+    return true if RbConfig::CONFIG['host_os'] =~ /mingw|mswin/
     false
   end
 
   def osx?
-    return true if RUBY_PLATFORM =~ /darwin/
+    return true if RbConfig::CONFIG['host_os'] =~ /darwin/
+    false
+  end
+
+  def linux?
+    return true if RbConfig::CONFIG['host_os'] =~ /linux/
     false
   end
 

@@ -274,7 +274,12 @@ namespace :test do
     puts "[#{t.name}] running #{t.prerequisites[0]}..."
 
     sdk_version = test_config['sdk_version']
-    cmd = "#{loomexec(sdk_version)} test/bin/#{const_lib_name}Test.loom --format ansi"
+    bin_dir = 'bin'
+
+    Dir.mkdir(bin_dir) unless Dir.exists?(bin_dir)
+
+    FileUtils.cp(APP, File.join(bin_dir, 'Main.loom'))
+    cmd = "#{loomexec(sdk_version)} --ignored ignore --format ansi"
     try(cmd, "failed to run .loom")
 
     puts ''
@@ -289,7 +294,12 @@ namespace :test do
     puts "[#{t.name}] running #{t.prerequisites[0]}..."
 
     sdk_version = test_config['sdk_version']
-    cmd = "#{loomexec(sdk_version)} test/bin/#{const_lib_name}Test.loom --format junit --format console"
+    bin_dir = 'bin'
+
+    Dir.mkdir(bin_dir) unless Dir.exists?(bin_dir)
+
+    FileUtils.cp(APP, File.join(bin_dir, 'Main.loom'))
+    cmd = "#{loomexec(sdk_version)} --ignored ignore --format junit --format console"
     try(cmd, "failed to run .loom")
 
     puts ''
