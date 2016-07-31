@@ -255,8 +255,8 @@ namespace :new do
 
   desc [
     "scaffolds the directories and files for a new loomlib project",
-    "creates a .gitignore file, rakefile, and template library and test code"
-    "this code assumes (but does not enforce) being run in an empty directory"
+    "creates a .gitignore file, rakefile, and template library and test code",
+    "this code assumes (but does not enforce) being run in an empty directory",
   ].join("\n")
   task :loomlib => [:gitignore, :rakefile, :libdir, :testdir]
 
