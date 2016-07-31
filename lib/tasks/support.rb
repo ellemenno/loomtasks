@@ -93,7 +93,7 @@ module LoomTasks
     # \2 => public static const version:String = '
     # \3 => <n.n.n>
     # \4 => '
-    Regexp.new(%q/(^\s*)(public static const version:String = ')(\d+\.\d+\.\d+)(');/)
+    Regexp.new(%q/(^\s*)(public static const version:String = ')(\d+\.\d+\.\d+)(';)/)
   end
 
   def lib_version()
