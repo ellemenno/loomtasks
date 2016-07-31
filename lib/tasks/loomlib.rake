@@ -6,6 +6,11 @@
 #   add the following to your project's Rakefile:
 #
 #   load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib.rake'))
+#
+#   starting a new project and don't have a rake file?
+#   use the scaffolding tasks to get set up:
+#
+#   rake -f ~/.loom/tasks/scaffolding.rake new:loomlib
 
 require 'etc'
 require 'fileutils'
