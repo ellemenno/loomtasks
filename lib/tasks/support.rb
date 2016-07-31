@@ -89,18 +89,18 @@ module LoomTasks
   end
 
   def lib_version_regex()
-    Regexp.new(%q/^\s*public static const version:String = '(\d+\.\d+\.\d+)';/)
-  end
-
-  def lib_version_literal(new_value)
-    "public static const version:String = '#{new_value}';"
+    # \1 => <space>
+    # \2 => public static const version:String = '
+    # \3 => <n.n.n>
+    # \4 => '
+    Regexp.new(%q/(^\s*)(public static const version:String = ')(\d+\.\d+\.\d+)(');/)
   end
 
   def lib_version()
     File.open(lib_version_file, 'r') do |f|
       matches = f.read.scan(lib_version_regex)
       raise("No version const defined in #{lib_version_file}") if matches.empty?
-      matches.first[0]
+      matches.first[2]
     end
   end
 
@@ -108,7 +108,7 @@ module LoomTasks
     old_value = lib_version # force the check for an existing version
     IO.write(
       lib_version_file,
-      File.open(lib_version_file, 'r') { |f| f.read.gsub!(lib_version_regex, lib_version_literal(new_value)) }
+      File.open(lib_version_file, 'r') { |f| f.read.gsub!(lib_version_regex, '\1\2'+new_value+'\4') }
     )
   end
 
@@ -117,17 +117,15 @@ module LoomTasks
   end
 
   def readme_version_regex()
-    Regexp.new(%q/download\/v(\d+\.\d+\.\d+)/)
-  end
-
-  def readme_version_literal(new_value)
-    "download/v#{new_value}"
+    # \1 => download/v
+    # \2 => <n.n.n>
+    Regexp.new(%q/(download\/v)(\d+\.\d+\.\d+)/)
   end
 
   def update_readme_version(new_value)
     IO.write(
       readme_file,
-      File.open(readme_file, 'r') { |f| f.read.gsub!(readme_version_regex, readme_version_literal(new_value)) }
+      File.open(readme_file, 'r') { |f| f.read.gsub!(readme_version_regex, '\1'+new_value) }
     )
   end
 
