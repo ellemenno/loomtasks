@@ -1,3 +1,4 @@
+require 'erb'
 require 'fileutils'
 require 'json'
 require 'pathname'
@@ -15,109 +16,42 @@ def lib_name()
   Pathname.new(Dir.pwd).basename.to_s
 end
 
+def template_dir
+  File.join(Dir.home, '.loom', 'tasks', 'templates')
+end
+
+def create_from_string(pathname, contents)
+  FileUtils.mkdir_p(File.dirname(pathname))
+  File.open(pathname, 'w+') { |f| f.write(contents) }
+end
+
+def create_from_template(pathname, template, binding)
+  FileUtils.mkdir_p(File.dirname(pathname))
+  File.open(pathname, 'w+') { |f| f.write(ERB.new(File.read(template)).result(binding)) }
+end
+
 def gitignore_pathname()
   File.join(Dir.pwd, '.gitignore')
 end
 
-def gitignore_contents()
-  [
-    "bin/",
-    "lib/build/",
-    "logs/",
-    "releases/",
-    "test/bin/",
-    "TEST-*.xml",
-    "",
-  ].join("\n")
+def gitignore_template()
+  File.join(template_dir, 'gitignore.erb')
 end
 
 def lib_testapp_pathname()
   File.join(Dir.pwd, 'test', 'src', 'app', "#{lib_name}Test.ls")
 end
 
-def lib_testapp_contents()
-  [
-    "package",
-    "{",
-    "",
-    "    import system.application.ConsoleApplication;",
-    "",
-    "    import pixeldroid.bdd.Spec;",
-    "    import pixeldroid.bdd.Reporter;",
-    "    import pixeldroid.bdd.reporters.AnsiReporter;",
-    "    import pixeldroid.bdd.reporters.ConsoleReporter;",
-    "    import pixeldroid.bdd.reporters.JunitReporter;",
-    "",
-    "    import #{lib_name}Spec;",
-    "",
-    "",
-    "    public class #{lib_name}Test extends ConsoleApplication",
-    "    {",
-    "        override public function run():void",
-    "        {",
-    "            #{lib_name}Spec.describe();",
-    "            addReporters();",
-    "            Spec.execute();",
-    "        }",
-    "",
-    "        private function addReporters():void",
-    "        {",
-    "            var arg:String;",
-    "            for (var i = 0; i < CommandLine.getArgCount(); i++)",
-    "            {",
-    "                arg = CommandLine.getArg(i);",
-    "                if (arg == '--format') Spec.addReporter(reporterByName(CommandLine.getArg(++i)));",
-    "            }",
-    "",
-    "            if (Spec.numReporters == 0) Spec.addReporter(new ConsoleReporter());",
-    "        }",
-    "",
-    "        private function reporterByName(name:String):Reporter",
-    "        {",
-    "            var r:Reporter;",
-    "",
-    "            switch (name.toLowerCase())",
-    "            {",
-    "                case 'ansi': r = new AnsiReporter(); break;",
-    "                case 'console': r = new ConsoleReporter(); break;",
-    "                case 'junit': r = new JunitReporter(); break;",
-    "            }",
-    "",
-    "            return r;",
-    "        }",
-    "    }",
-    "}",
-    "",
-  ].join("\n")
+def lib_testapp_template()
+  File.join(template_dir, 'LoomlibTest.ls.erb')
 end
 
 def lib_testspec_pathname()
   File.join(Dir.pwd, 'test', 'src', 'spec', "#{lib_name}Spec.ls")
 end
 
-def lib_testspec_contents()
-  [
-    "package",
-    "{",
-    "    import pixeldroid.bdd.Spec;",
-    "    import pixeldroid.bdd.Thing;",
-    "",
-    "    import foo.#{lib_name};",
-    "",
-    "    public static class #{lib_name}Spec",
-    "    {",
-    "        public static function describe():void",
-    "        {",
-    "            var it:Thing = Spec.describe('#{lib_name}');",
-    "",
-    "            it.should('have useful tests', function() {",
-    "                it.expects(true).toBeFalsey();",
-    "            });",
-    "        }",
-    "    }",
-    "}",
-    "",
-  ].join("\n")
+def lib_testspec_template()
+  File.join(template_dir, 'LoomlibSpec.ls.erb')
 end
 
 def loombuild_pathname(dir)
@@ -169,88 +103,54 @@ def rakefile_pathname()
   File.join(Dir.pwd, 'Rakefile')
 end
 
-def rakefile_contents()
-  [
-    "LIB_NAME = '#{lib_name}'",
-    "LIB_VERSION_FILE = File.join('lib', 'src', '#{lib_name}.ls')",
-    "",
-    "load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib.rake'))",
-    "#load(File.join(ENV['HOME'], '.loom', 'tasks', 'loomlib_demo.rake')) # optional",
-    "",
-  ].join("\n")
+def rakefile_template()
+  File.join(template_dir, 'Rakefile.erb')
 end
 
 def sourcefile_pathname()
   File.join(Dir.pwd, 'lib', 'src', "#{lib_name}.ls")
 end
 
-def sourcefile_contents()
-  [
-    "package foo",
-    "{",
-    "",
-    "    public class #{lib_name}",
-    "    {",
-    "        public static const version:String = '1.0.0';",
-    "    }",
-    "}",
-    "",
-  ].join("\n")
+def sourcefile_template()
+  File.join(template_dir, 'Loomlib.ls.erb')
 end
 
 
 task :default => :usage
 
 task :usage do |t, args|
+  this_file = File.basename(__FILE__)
   puts ''
-  puts "#{File.basename($0)}: a utility to create a new loomlib directory structure"
+  puts "#{this_file}: a utility to create a new loomlib directory structure"
   puts ''
   puts 'typically this is run from another directory, to bootstrap a new loomlib project there:'
-  puts 'cd MyLoomlib'
-  puts "rake -f #{File.join(Dir.home, '.loom', 'tasks', File.basename($0))} new:loomlib"
-  puts 'rake'
+  puts ''
+  puts '$ cd MyLoomlib'
+  puts "$ rake -f #{File.join(Dir.home, '.loom', 'tasks', this_file)} new:loomlib"
+  puts '$ rake'
 end
 
 namespace :new do
 
   task :gitignore do |t, args|
-    File.open(gitignore_pathname, 'w') { |f| f.write(gitignore_contents) }
+    create_from_template(gitignore_pathname, gitignore_template, binding)
   end
 
   task :rakefile do |t, args|
-    File.open(rakefile_pathname, 'w') { |f| f.write(rakefile_contents) }
+    create_from_template(rakefile_pathname, rakefile_template, binding)
   end
 
   task :libdir do |t, args|
-    pathname = loomconfig_pathname('lib')
-    FileUtils.mkdir_p(File.dirname(pathname))
-    File.open(pathname, 'w') { |f| f.write(loomconfig_contents) }
-
-    pathname = loombuild_pathname('lib')
-    FileUtils.mkdir_p(File.dirname(pathname))
-    File.open(pathname, 'w') { |f| f.write(loombuild_contents('lib')) }
-
-    pathname = sourcefile_pathname()
-    FileUtils.mkdir_p(File.dirname(pathname))
-    File.open(pathname, 'w') { |f| f.write(sourcefile_contents()) }
+    create_from_string(loomconfig_pathname('lib'), loomconfig_contents)
+    create_from_string(loombuild_pathname('lib'), loombuild_contents('lib'))
+    create_from_template(sourcefile_pathname, sourcefile_template, binding)
   end
 
   task :testdir do |t, args|
-    pathname = loomconfig_pathname('test')
-    FileUtils.mkdir_p(File.dirname(pathname))
-    File.open(pathname, 'w') { |f| f.write(loomconfig_contents) }
-
-    pathname = loombuild_pathname('test')
-    FileUtils.mkdir_p(File.dirname(pathname))
-    File.open(pathname, 'w') { |f| f.write(loombuild_contents('test')) }
-
-    pathname = lib_testapp_pathname()
-    FileUtils.mkdir_p(File.dirname(pathname))
-    File.open(pathname, 'w') { |f| f.write(lib_testapp_contents()) }
-
-    pathname = lib_testspec_pathname()
-    FileUtils.mkdir_p(File.dirname(pathname))
-    File.open(pathname, 'w') { |f| f.write(lib_testspec_contents()) }
+    create_from_string(loomconfig_pathname('test'), loomconfig_contents)
+    create_from_string(loombuild_pathname('test'), loombuild_contents('test'))
+    create_from_template(lib_testapp_pathname, lib_testapp_template, binding)
+    create_from_template(lib_testspec_pathname, lib_testspec_template, binding)
   end
 
   desc [

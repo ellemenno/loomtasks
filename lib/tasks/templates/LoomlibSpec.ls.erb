@@ -1,0 +1,19 @@
+package
+{
+    import pixeldroid.bdd.Spec;
+    import pixeldroid.bdd.Thing;
+
+    import <%= lib_name %>;
+
+    public static class <%= lib_name %>Spec
+    {
+        public static function describe():void
+        {
+            var it:Thing = Spec.describe('<%= lib_name %>');
+
+            it.should('have useful tests', function() {
+                it.expects(true).toBeFalsey();
+            });
+        }
+    }
+}

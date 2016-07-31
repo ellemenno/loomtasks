@@ -11,6 +11,10 @@ def installed_tasks_dir()
   File.join(Dir.home, '.loom', 'tasks')
 end
 
+def installed_templates_dir()
+  File.join(Dir.home, '.loom', 'tasks', 'templates')
+end
+
 task :default => :list_targets
 
 task :list_targets do |t, args|
@@ -29,9 +33,11 @@ desc [
 ].join("\n")
 task :install do |t, args|
   Dir.mkdir(installed_tasks_dir) unless Dir.exists?(installed_tasks_dir)
+  Dir.mkdir(installed_templates_dir) unless Dir.exists?(installed_templates_dir)
 
   FileUtils.cp_r(Dir.glob(File.join('lib', 'tasks', '*.rake')), installed_tasks_dir)
   FileUtils.cp_r(Dir.glob(File.join('lib', 'tasks', '*.rb')), installed_tasks_dir)
+  FileUtils.cp_r(Dir.glob(File.join('lib', 'tasks', 'templates', '*.erb')), installed_templates_dir)
 
   puts "[#{t.name}] task completed, tasks installed to #{installed_tasks_dir}"
   puts ''
