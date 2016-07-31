@@ -116,19 +116,30 @@ module LoomTasks
     File.join(sdk_root, sdk_version, 'libs')
   end
 
-  def readme_version_regex(lib_name)
+  def installation_path_regex()
+    # \1 => .loom/sdks/
+    # \2 => <sdk>
+    # \3 => /libs/<lib_name>.loomlib
+    Regexp.new(%r/(\.loom\/sdks\/)(.*)(\/libs\/.*\.loomlib)/)
+  end
+
+  def download_url_regex()
     # \1 => download/v
     # \2 => <n.n.n>
     # \3 => /<lib_name>-
     # \4 => <sdk>
     # \5 => .loomlib
-    Regexp.new(%r/(download\/v)(\d+\.\d+\.\d+)(\/#{Regexp.escape(lib_name)}-)(.*)(.loomlib)/)
+    Regexp.new(%r/(download\/v)(\d+\.\d+\.\d+)(\/.*-)(.*)(.loomlib)/)
   end
 
-  def update_readme_version(lib_name, new_value, sdk_version)
+  def update_readme_version(new_value, sdk_version)
     IO.write(
       readme_file,
-      File.open(readme_file, 'r') { |f| f.read.gsub!(readme_version_regex(lib_name), '\1'+new_value+'\3'+sdk_version+'\5') }
+      File.open(readme_file, 'r') do |f|
+        f.read
+        .gsub(download_url_regex(), '\1'+new_value+'\3'+sdk_version+'\5')
+        .gsub!(installation_path_regex(), '\1'+sdk_version+'\3')
+      end
     )
   end
 
