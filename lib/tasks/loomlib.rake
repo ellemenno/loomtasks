@@ -231,7 +231,7 @@ namespace :lib do
     release_dir = 'releases'
 
     puts "[#{t.name}] updating README to reference version #{lib_version}"
-    update_readme_version(lib_version)
+    update_readme_version(const_lib_name, lib_version, sdk)
 
     Dir.mkdir(release_dir) unless Dir.exists?(release_dir)
 

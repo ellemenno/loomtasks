@@ -93,7 +93,7 @@ module LoomTasks
     # \2 => public static const version:String = '
     # \3 => <n.n.n>
     # \4 => '
-    Regexp.new(%q/(^\s*)(public static const version:String = ')(\d+\.\d+\.\d+)(';)/)
+    Regexp.new(%r/(^\s*)(public static const version:String = ')(\d+\.\d+\.\d+)(';)/)
   end
 
   def lib_version()
@@ -116,16 +116,19 @@ module LoomTasks
     File.join(sdk_root, sdk_version, 'libs')
   end
 
-  def readme_version_regex()
+  def readme_version_regex(lib_name)
     # \1 => download/v
     # \2 => <n.n.n>
-    Regexp.new(%q/(download\/v)(\d+\.\d+\.\d+)/)
+    # \3 => /<lib_name>-
+    # \4 => <sdk>
+    # \5 => .loomlib
+    Regexp.new(%r/(download\/v)(\d+\.\d+\.\d+)(\/#{Regexp.escape(lib_name)}-)(.*)(.loomlib)/)
   end
 
-  def update_readme_version(new_value)
+  def update_readme_version(lib_name, new_value, sdk_version)
     IO.write(
       readme_file,
-      File.open(readme_file, 'r') { |f| f.read.gsub!(readme_version_regex, '\1'+new_value) }
+      File.open(readme_file, 'r') { |f| f.read.gsub!(readme_version_regex(lib_name), '\1'+new_value+'\3'+sdk_version+'\5') }
     )
   end
 
