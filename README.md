@@ -38,7 +38,7 @@ Clone this repo.
 
 Running `rake` in your project directory will execute the default task, which prints the list of available tasks and some useful info:
 
-    Foo v1.2.3 Rakefile running on Ruby 2.1.1 (lib=sprint33, test=sprint33)
+    Foo v1.2.3 Rakefile running on Ruby 2.3.0 (lib=sprint33, test=sprint33)
     rake clean              # removes intermediate files to ensure a clean build
     rake clobber            # removes all generated artifacts to restore project to checkout-like state
     rake demo:build         # builds FooDemo.loom for sprint33 SDK
@@ -54,7 +54,8 @@ Running `rake` in your project directory will execute the default task, which pr
     rake test:build         # builds FooTest.loom against sprint33 SDK
     rake test:ci            # runs FooTest.loom for CI
     rake test:run           # runs FooTest.loom for the console
-    (using loomtasks v1.1.0)
+    rake version[v]         # changes the library version number
+    (using loomtasks v1.2.0)
 
     use `rake -D` for more detailed task descriptions
 
