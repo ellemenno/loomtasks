@@ -4,7 +4,7 @@ require 'rbconfig'
 
 module LoomTasks
 
-  VERSION = '1.1.0'
+  VERSION = '1.2.0'
 
   EXIT_OK = 0
 
@@ -24,16 +24,9 @@ module LoomTasks
   end
 
   def loomexec(sdk_version)
-    File.join(sdk_root, sdk_version, 'tools', 'loomexec')
-  end
-
-  def loomlaunch_win(sdk_version)
-    exe = File.join(sdk_root, sdk_version, 'bin', 'LoomDemo.exe')
-    %(start "Loom" #{exe} ProcessID #{Process.pid})
-  end
-
-  def loomlaunch_osx(sdk_version)
-    File.join(sdk_root, sdk_version, 'bin', 'LoomDemo.app', 'Contents', 'MacOS', 'LoomDemo')
+    # needs to be run in the project root
+    # stubbornly, the runner loads bin/Main.loom from the current working directory
+    File.join(sdk_tools(sdk_version), 'loomexec')
   end
 
   def loomlaunch(sdk_version)
@@ -43,13 +36,48 @@ module LoomTasks
     return loomlaunch_win(sdk_version) if windows?
   end
 
+  def loomlaunch_win(sdk_version)
+    exe = File.join(sdk_bin(sdk_version), 'LoomPlayer.exe')
+    %(start "Loom" #{exe} ProcessID #{Process.pid})
+  end
+
+  def loomlaunch_osx(sdk_version)
+    File.join(sdk_bin(sdk_version), 'LoomPlayer.app', 'Contents', 'MacOS', 'LoomPlayer')
+  end
+
   def lsc(sdk_version)
     # needs to be run in the project root
-    File.join(sdk_root, sdk_version, 'tools', 'lsc')
+    File.join(sdk_tools(sdk_version), 'lsc')
   end
 
   def sdk_root()
     File.join(Dir.home, '.loom', 'sdks')
+  end
+
+  def sdk_architecture()
+    os = 'unknown'
+    arch = 'x86'
+
+    if osx?
+      os = "osx"
+      arch = "x64" if (`uname -m`.chomp == 'x86_64')
+    elsif windows?
+      os = "windows"
+      arch = "x64" if (/\.*64.*/ =~ `reg query "HKLM\\System\\CurrentControlSet\\Control\\Session Manager\\Environment" /v PROCESSOR_ARCHITECTURE`)
+    elsif linux?
+      os = "linux"
+      arch = "x64" if (`uname -m`.chomp == 'x86_64')
+    end
+
+    "#{os}-#{arch}"
+  end
+
+  def sdk_bin(sdk_version)
+    File.join(sdk_root, sdk_version, 'bin', sdk_architecture, 'bin')
+  end
+
+  def sdk_tools(sdk_version)
+    File.join(sdk_root, sdk_version, 'bin', sdk_architecture, 'tools')
   end
 
   def parse_loom_config(file)
@@ -61,44 +89,72 @@ module LoomTasks
   end
 
   def lib_version_regex()
-    Regexp.new(%q/^\s*public static const version:String = '(\d\.\d\.\d)';/)
+    # \1 => <space>
+    # \2 => public static const version:String = '
+    # \3 => <n.n.n>
+    # \4 => '
+    Regexp.new(%r/(^\s*)(public static const version:String = ')(\d+\.\d+\.\d+)(';)/)
   end
 
   def lib_version()
     File.open(lib_version_file, 'r') do |f|
       matches = f.read.scan(lib_version_regex)
       raise("No version const defined in #{lib_version_file}") if matches.empty?
-      matches.first[0]
+      matches.first[2]
     end
+  end
+
+  def update_lib_version(new_value)
+    old_value = lib_version # force the check for an existing version
+    IO.write(
+      lib_version_file,
+      File.open(lib_version_file, 'r') { |f| f.read.gsub!(lib_version_regex, '\1\2'+new_value+'\4') }
+    )
   end
 
   def libs_path(sdk_version)
     File.join(sdk_root, sdk_version, 'libs')
   end
 
-  def readme_version_regex()
-    Regexp.new(%q/download\/v(\d\.\d\.\d)/)
+  def installation_path_regex()
+    # \1 => .loom/sdks/
+    # \2 => <sdk>
+    # \3 => /libs/<lib_name>.loomlib
+    Regexp.new(%r/(\.loom\/sdks\/)(.*)(\/libs\/.*\.loomlib)/)
   end
 
-  def readme_version_literal()
-    "download/v#{lib_version}"
+  def download_url_regex()
+    # \1 => download/v
+    # \2 => <n.n.n>
+    # \3 => /<lib_name>-
+    # \4 => <sdk>
+    # \5 => .loomlib
+    Regexp.new(%r/(download\/v)(\d+\.\d+\.\d+)(\/.*-)(.*)(.loomlib)/)
   end
 
-  def update_readme_version()
+  def update_readme_version(new_value, sdk_version)
     IO.write(
       readme_file,
-      File.open(readme_file, 'r') { |f| f.read.gsub!(readme_version_regex, readme_version_literal) }
+      File.open(readme_file, 'r') do |f|
+        f.read
+        .gsub(download_url_regex(), '\1'+new_value+'\3'+sdk_version+'\5')
+        .gsub!(installation_path_regex(), '\1'+sdk_version+'\3')
+      end
     )
   end
 
   def windows?
-    return false if RUBY_PLATFORM =~ /cygwin/ # i386-cygwin
-    return true if ENV['OS'] == 'Windows_NT'
+    return true if RbConfig::CONFIG['host_os'] =~ /mingw|mswin/
     false
   end
 
   def osx?
-    return true if RUBY_PLATFORM =~ /darwin/
+    return true if RbConfig::CONFIG['host_os'] =~ /darwin/
+    false
+  end
+
+  def linux?
+    return true if RbConfig::CONFIG['host_os'] =~ /linux/
     false
   end
 
