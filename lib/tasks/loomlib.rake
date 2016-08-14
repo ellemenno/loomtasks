@@ -316,7 +316,7 @@ namespace :test do
 
     FileUtils.cp(APP, File.join(bin_dir, 'Main.loom'))
     cmd = "#{loomexec(sdk_version)} --ignored ignore --format ansi"
-    try(cmd, "failed to run .loom")
+    try(cmd, "tests failed")
 
     puts ''
   end
@@ -336,7 +336,7 @@ namespace :test do
 
     FileUtils.cp(APP, File.join(bin_dir, 'Main.loom'))
     cmd = "#{loomexec(sdk_version)} --ignored ignore --format junit --format console"
-    try(cmd, "failed to run .loom")
+    try(cmd, "tests failed")
 
     puts ''
   end
