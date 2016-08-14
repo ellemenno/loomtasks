@@ -315,7 +315,7 @@ namespace :test do
     Dir.mkdir(bin_dir) unless Dir.exists?(bin_dir)
 
     FileUtils.cp(APP, File.join(bin_dir, 'Main.loom'))
-    cmd = "#{loomexec(sdk_version)} --ignored ignore --format ansi"
+    cmd = "#{loomexec(sdk_version)} --format ansi"
     try(cmd, "tests failed")
 
     puts ''
@@ -335,7 +335,7 @@ namespace :test do
     Dir.mkdir(bin_dir) unless Dir.exists?(bin_dir)
 
     FileUtils.cp(APP, File.join(bin_dir, 'Main.loom'))
-    cmd = "#{loomexec(sdk_version)} --ignored ignore --format junit --format console"
+    cmd = "#{loomexec(sdk_version)} --format junit --format console"
     try(cmd, "tests failed")
 
     puts ''

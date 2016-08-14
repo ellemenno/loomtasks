@@ -26,7 +26,8 @@ module LoomTasks
   def loomexec(sdk_version)
     # needs to be run in the project root
     # stubbornly, the runner loads bin/Main.loom from the current working directory
-    File.join(sdk_tools(sdk_version), 'loomexec')
+    # weirdly, the runner expects a throw-away arg, so we pass an ignorable something
+    "#{File.join(sdk_tools(sdk_version), 'loomexec')} --ignore ignored"
   end
 
   def loomlaunch(sdk_version)
