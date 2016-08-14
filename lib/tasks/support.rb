@@ -4,7 +4,7 @@ require 'rbconfig'
 
 module LoomTasks
 
-  VERSION = '1.2.0'
+  VERSION = '1.2.1'
 
   EXIT_OK = 0
 
