@@ -89,14 +89,14 @@ end
 @lib_loom_config = nil
 @test_loom_config = nil
 
-CLEAN.include ['lib/build/**', 'test/bin/**', 'TEST-*.xml']
+CLEAN.include ['bin/**', 'lib/build/**', 'test/bin/**', 'TEST-*.xml']
 Rake::Task[:clean].clear_comments()
 Rake::Task[:clean].add_description([
   "removes intermediate files to ensure a clean build",
   "running now would delete #{CLEAN.length} files:\n  #{CLEAN.join("\n  ")}",
 ].join("\n"))
 
-CLOBBER.include ['lib/build', 'test/bin', 'releases']
+CLOBBER.include ['bin', 'lib/build', 'test/bin', 'releases']
 Rake::Task[:clobber].enhance(['lib:uninstall'])
 Rake::Task[:clobber].clear_comments()
 Rake::Task[:clobber].add_description([
