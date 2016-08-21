@@ -43,6 +43,14 @@ task :install do |t, args|
   puts ''
 end
 
+desc [
+  "report loomtasks version",
+].join("\n")
+task :version do |t, args|
+  puts "loomtasks v#{VERSION}"
+  puts ''
+end
+
 namespace :list do
 
   desc [
