@@ -176,41 +176,55 @@ FileList['test/src/spec/*.ls'].each do |src|
 end
 
 
-desc [
-  "sets the provided SDK version into lib/loom.config and test/loom.config",
-  "lib/loom.config defines which SDK will be used to compile the loomlib, and also where to install it",
-  "test/loom.config defines which SDK will be used to compile the test app and demo app",
-].join("\n")
-task :set, [:sdk] => 'lib:uninstall' do |t, args|
-  args.with_defaults(:sdk => 'sprint33')
-  sdk_version = args.sdk
+namespace :set do
 
-  lib_config['sdk_version'] = sdk_version
-  test_config['sdk_version'] = sdk_version
+  desc [
+    "sets the provided SDK version into #{lib_config_file} and #{test_config_file}",
+    "this updates #{lib_config_file} to define which SDK will compile the loomlib and be the install target",
+    "this updates #{test_config_file} to define which SDK will compile the test app and demo app",
+  ].join("\n")
+  task :sdk, [:id] => 'lib:uninstall' do |t, args|
+    args.with_defaults(:id => default_sdk)
+    sdk_version = args.id
+    lib_dir = libs_path(sdk_version)
 
-  write_lib_config(lib_config)
-  write_test_config(test_config)
+    fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 
-  puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
-  puts ''
+    lib_config['sdk_version'] = sdk_version
+    test_config['sdk_version'] = sdk_version
+
+    write_lib_config(lib_config)
+    write_test_config(test_config)
+
+    puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
+    puts ''
+  end
+
+  desc [
+    "sets the library version number into #{lib_build_file} and #{lib_version_file}",
+    "#{lib_version_file} is expected to have a line matching:",
+    "#{lib_version_regex.to_s}",
+  ].join("\n")
+  task :version, [:v] do |t, args|
+    args.with_defaults(:v => '1.0.0')
+    lib_version = args.v
+
+    lib_build_config['version'] = lib_version
+    lib_build_config['modules'].first['version'] = lib_version
+
+    write_lib_build_config(lib_build_config)
+    update_lib_version(lib_version)
+
+    puts "[#{t.name}] task completed, lib version updated to #{lib_version}"
+    puts ''
+  end
 end
 
 desc [
-  "changes the library version number",
-  "this updates #{lib_build_file}",
-  "this updates #{lib_version_file}",
+  "report loomlib version",
 ].join("\n")
-task :version, [:v] do |t, args|
-  args.with_defaults(:v => '1.0.0')
-  lib_version = args.v
-
-  lib_build_config['version'] = lib_version
-  lib_build_config['modules'].first['version'] = lib_version
-
-  write_lib_build_config(lib_build_config)
-  update_lib_version(lib_version)
-
-  puts "[#{t.name}] task completed, lib version updated to #{lib_version}"
+task :version do |t, args|
+  puts "#{const_lib_name} v#{lib_version}"
   puts ''
 end
 
@@ -315,14 +329,14 @@ namespace :test do
     "the test runner will print short-form results to stdout",
   ].join("\n")
   task :run => APP do |t, args|
-    puts "[#{t.name}] running #{t.prerequisites[0]}..."
-
     sdk_version = test_config['sdk_version']
     bin_dir = 'bin'
+    main_binary = File.join(bin_dir, 'Main.loom')
 
+    # loomexec expects to find bin/Main.loom, so we make a launchable copy there
+    puts "[#{t.name}] running #{t.prerequisites[0]} as #{main_binary}..."
     Dir.mkdir(bin_dir) unless Dir.exists?(bin_dir)
-
-    FileUtils.cp(APP, File.join(bin_dir, 'Main.loom'))
+    FileUtils.cp(APP, main_binary)
     cmd = "#{loomexec(sdk_version)} --format ansi"
     try(cmd, "tests failed")
 
@@ -339,10 +353,12 @@ namespace :test do
 
     sdk_version = test_config['sdk_version']
     bin_dir = 'bin'
+    main_binary = File.join(bin_dir, 'Main.loom')
 
+    # loomexec expects to find bin/Main.loom, so we make a launchable copy there
+    puts "[#{t.name}] running #{t.prerequisites[0]} as #{main_binary}..."
     Dir.mkdir(bin_dir) unless Dir.exists?(bin_dir)
-
-    FileUtils.cp(APP, File.join(bin_dir, 'Main.loom'))
+    FileUtils.cp(APP, main_binary)
     cmd = "#{loomexec(sdk_version)} --format junit --format console"
     try(cmd, "tests failed")
 
