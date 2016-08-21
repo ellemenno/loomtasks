@@ -51,6 +51,10 @@ module LoomTasks
     File.join(sdk_tools(sdk_version), 'lsc')
   end
 
+  def global_config_file()
+    File.join(Dir.home, '.loom', 'loom.config')
+  end
+
   def sdk_root()
     File.join(Dir.home, '.loom', 'sdks')
   end

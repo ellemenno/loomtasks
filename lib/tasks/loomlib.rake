@@ -33,6 +33,10 @@ def const_lib_version_file
   const_find('LIB_VERSION_FILE')
 end
 
+def default_sdk
+  global_config['default_sdk']
+end
+
 def lib_build_file()
   File.join('lib', 'src', "#{const_lib_name}.build")
 end
@@ -51,6 +55,10 @@ end
 
 def test_config_file()
   File.join('test', 'loom.config')
+end
+
+def global_config()
+  @global_loom_config || (@global_loom_config = parse_loom_config(global_config_file))
 end
 
 def lib_config()
