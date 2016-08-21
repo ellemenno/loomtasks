@@ -12,9 +12,10 @@ require 'fileutils'
 require File.join(File.dirname(__FILE__), 'support')
 include LoomTasks
 
-DEMO = "test/bin/#{const_lib_name}Demo.loom"
 
-FileList['test/src/demo/*.ls'].each do |src|
+DEMO = File.join('test', 'bin', "#{const_lib_name}Demo.loom")
+
+FileList[File.join('test', 'src', 'demo', '*.ls')].each do |src|
   file DEMO => src
 end
 
@@ -22,7 +23,7 @@ file DEMO => LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
 
   sdk_version = test_config['sdk_version']
-  file_installed = "#{sdk_root}/#{sdk_version}/libs/#{const_lib_name}.loomlib"
+  file_installed = File.join(sdk_root, sdk_version, 'libs', "#{const_lib_name}.loomlib")
 
   Rake::Task['lib:install'].invoke unless FileUtils.uptodate?(file_installed, [LIBRARY])
 
@@ -77,7 +78,7 @@ namespace :demo do
   end
 
   desc [
-    "executes #{const_lib_name}Demo.loom as a commandline app, with options",
+    "executes #{const_lib_name}Demo.loom as a commandline app, with options, if provided",
     "use this launcher if your demo application class extends system.application.ConsoleApplication",
     "if your demo is a gui app, remove this task from the list with Rake::Task['demo:cli'].clear",
   ].join("\n")
@@ -88,12 +89,15 @@ namespace :demo do
     bin_dir = 'bin'
     main_binary = File.join(bin_dir, 'Main.loom')
 
+    puts "[#{t.name}] executing #{DEMO} as #{main_binary}..."
+    abort("could not find '#{DEMO}' to launch") unless File.exists?(DEMO)
+
     # loomexec expects to find bin/Main.loom, so we make a launchable copy there
-    puts "[#{t.name}] executing #{t.prerequisites[0]} as #{main_binary}..."
     Dir.mkdir(bin_dir) unless Dir.exists?(bin_dir)
     FileUtils.cp(DEMO, main_binary)
+
     cmd = "#{loomexec(sdk_version)} #{args.options}"
-    try(cmd, "failed to run .loom")
+    try(cmd, "failed to exec .loom")
 
     puts ''
   end

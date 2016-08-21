@@ -45,6 +45,10 @@ def lib_config_file()
   File.join('lib', 'loom.config')
 end
 
+def lib_file()
+  "#{const_lib_name}.loomlib"
+end
+
 def lib_version_file()
   const_lib_version_file
 end
@@ -127,7 +131,7 @@ task :check_consts do |t, args|
 end
 
 
-LIBRARY = "lib/build/#{const_lib_name}.loomlib"
+LIBRARY = File.join('lib', 'build', lib_file)
 
 file LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
@@ -143,18 +147,18 @@ file LIBRARY do |t, args|
   puts ''
 end
 
-FileList['lib/src/**/*.ls'].each do |src|
+FileList[File.join('lib', 'src', '**', '*.ls')].each do |src|
   file LIBRARY => src
 end
 
 
-APP = "test/bin/#{const_lib_name}Test.loom"
+APP = File.join('test', 'bin', "#{const_lib_name}Test.loom")
 
 file APP => LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
 
   sdk_version = test_config['sdk_version']
-  file_installed = File.join(libs_path(sdk_version), "#{const_lib_name}.loomlib")
+  file_installed = File.join(libs_path(sdk_version), lib_file)
 
   Rake::Task['lib:install'].invoke unless FileUtils.uptodate?(file_installed, [LIBRARY])
 
@@ -167,11 +171,11 @@ file APP => LIBRARY do |t, args|
   puts ''
 end
 
-FileList['test/src/app/*.ls'].each do |src|
+FileList[File.join('test', 'src', 'app', '*.ls')].each do |src|
   file APP => src
 end
 
-FileList['test/src/spec/*.ls'].each do |src|
+FileList[File.join('test', 'src', 'spec', '*.ls')].each do |src|
   file APP => src
 end
 
@@ -241,7 +245,7 @@ end
 namespace :lib do
 
   desc [
-    "builds #{const_lib_name}.loomlib for #{lib_config['sdk_version']} SDK",
+    "builds #{lib_file} for #{lib_config['sdk_version']} SDK",
     "the SDK is specified in test/loom.config",
     "you can change the SDK with rake set[sdk]",
     "the .loomlib binary is created in lib/build",
@@ -252,12 +256,11 @@ namespace :lib do
   end
 
   desc [
-    "prepares sdk-specific #{const_lib_name}.loomlib for release, and updates version in README",
+    "prepares sdk-specific #{lib_file} for release, and updates version in README",
     "the version value will be read from #{LIB_VERSION_FILE}",
     "it must match this regex: #{lib_version_regex}",
   ].join("\n")
   task :release => LIBRARY do |t, args|
-    lib = "lib/build/#{const_lib_name}.loomlib"
     sdk = lib_config['sdk_version']
     ext = '.loomlib'
     release_dir = 'releases'
@@ -267,39 +270,38 @@ namespace :lib do
 
     Dir.mkdir(release_dir) unless Dir.exists?(release_dir)
 
-    lib_release = %Q[#{File.basename(lib, ext)}-#{sdk}#{ext}]
-    FileUtils.copy(lib, "#{release_dir}/#{lib_release}")
+    lib_release = %Q[#{File.basename(LIBRARY, ext)}-#{sdk}#{ext}]
+    FileUtils.copy(LIBRARY, "#{release_dir}/#{lib_release}")
 
     puts "[#{t.name}] task completed, find #{lib_release} in #{release_dir}/"
     puts ''
   end
 
   desc [
-    "installs #{const_lib_name}.loomlib into #{lib_config['sdk_version']} SDK",
+    "installs #{lib_file} into #{lib_config['sdk_version']} SDK",
     "this makes it available to reference in .build files of any project targeting #{lib_config['sdk_version']}",
   ].join("\n")
   task :install => LIBRARY do |t, args|
     sdk_version = lib_config['sdk_version']
-    lib = File.join('lib', 'build', "#{const_lib_name}.loomlib")
 
-    FileUtils.cp(lib, libs_path(sdk_version))
+    FileUtils.cp(LIBRARY, libs_path(sdk_version))
 
-    puts "[#{t.name}] task completed, #{const_lib_name}.loomlib installed for #{sdk_version}"
+    puts "[#{t.name}] task completed, #{lib_file} installed for #{sdk_version}"
     puts ''
   end
 
   desc [
-    "removes #{const_lib_name}.loomlib from #{lib_config['sdk_version']} SDK",
+    "removes #{lib_file} from #{lib_config['sdk_version']} SDK",
   ].join("\n")
   task :uninstall do |t, args|
     sdk_version = lib_config['sdk_version']
-    lib = File.join(libs_path(sdk_version), "#{const_lib_name}.loomlib")
+    installed_lib = File.join(libs_path(sdk_version), lib_file)
 
-    if (File.exists?(lib))
-      FileUtils.rm_r(lib)
-      puts "[#{t.name}] task completed, #{const_lib_name}.loomlib removed from #{sdk_version}"
+    if (File.exists?(installed_lib))
+      FileUtils.rm_r(installed_lib)
+      puts "[#{t.name}] task completed, #{lib_file} removed from #{sdk_version}"
     else
-      puts "[#{t.name}] nothing to do;  no #{const_lib_name}.loomlib found in #{sdk_version} sdk"
+      puts "[#{t.name}] nothing to do;  no #{lib_file} found in #{sdk_version} sdk"
     end
     puts ''
   end
@@ -311,10 +313,10 @@ namespace :lib do
   ].join("\n")
   task :show do |t, args|
     sdk_version = lib_config['sdk_version']
+    lib_dir = libs_path(sdk_version)
 
-    libs_dir = File.join(sdk_root, sdk_version, 'libs')
-    puts("installed libs in #{libs_dir}")
-    Dir.glob("#{libs_dir}/*").each { |f| puts(File.basename(f)) }
+    puts("installed libs in #{lib_dir}")
+    Dir.glob(File.join(lib_dir, '*')).each { |f| puts(File.basename(f)) }
 
     puts ''
   end
