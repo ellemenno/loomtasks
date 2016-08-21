@@ -23,6 +23,14 @@ module LoomTasks
     fail(failure_message) if (exec_with_echo(cmd) != EXIT_OK)
   end
 
+  def bin_dir()
+    'bin'
+  end
+
+  def main_binary()
+    File.join(bin_dir, 'Main.loom')
+  end
+
   def loomexec(sdk_version)
     # needs to be run in the project root
     # stubbornly, the runner loads bin/Main.loom from the current working directory

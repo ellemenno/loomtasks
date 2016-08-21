@@ -342,8 +342,6 @@ namespace :test do
   ].join("\n")
   task :run => APP do |t, args|
     sdk_version = test_config['sdk_version']
-    bin_dir = 'bin'
-    main_binary = File.join(bin_dir, 'Main.loom')
 
     # loomexec expects to find bin/Main.loom, so we make a launchable copy there
     puts "[#{t.name}] running #{t.prerequisites[0]} as #{main_binary}..."
@@ -361,11 +359,7 @@ namespace :test do
     "the jUnit xml report files are written to the project root, as TEST-*.xml",
   ].join("\n")
   task :ci => APP do |t, args|
-    puts "[#{t.name}] running #{t.prerequisites[0]}..."
-
     sdk_version = test_config['sdk_version']
-    bin_dir = 'bin'
-    main_binary = File.join(bin_dir, 'Main.loom')
 
     # loomexec expects to find bin/Main.loom, so we make a launchable copy there
     puts "[#{t.name}] running #{t.prerequisites[0]} as #{main_binary}..."
