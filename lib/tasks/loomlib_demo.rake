@@ -57,24 +57,19 @@ namespace :demo do
   task :gui => DEMO do |t, args|
     sdk_version = test_config['sdk_version']
 
-    Dir.chdir('test') do
-      binary = "bin/#{const_lib_name}Demo.loom"
-      bin_dir = 'bin'
-      abort("could not find '#{binary}'' to launch") unless File.exists?(binary)
     puts "[#{t.name}] launching #{DEMO} as #{main_binary}..."
     abort("could not find '#{DEMO}' to launch") unless File.exists?(DEMO)
 
-      # loomlaunch expects to find bin/Main.loom, so we make a launchable copy here
+    # loomlaunch expects to find bin/Main.loom, so we make a launchable copy here
     Dir.mkdir(bin_dir) unless Dir.exists?(bin_dir)
     FileUtils.cp(DEMO, main_binary)
 
-      # capture the interrupt signal from a quit app
-      begin
-        cmd = loomlaunch(sdk_version)
-        try(cmd, "failed to launch .loom")
-      rescue Exception => e
-        puts ' (quit)'
-      end
+    # capture the interrupt signal from a quit app
+    begin
+      cmd = loomlaunch(sdk_version)
+      try(cmd, "failed to launch .loom")
+    rescue Exception => e
+      puts ' (quit)'
     end
   end
 
