@@ -54,16 +54,17 @@ namespace :demo do
     "if your demo is a cli app, remove this task from the list with Rake::Task['demo:gui'].clear",
   ].join("\n")
   task :gui => DEMO do |t, args|
-    puts "[#{t.name}] launching #{t.prerequisites[0]}..."
-
     sdk_version = test_config['sdk_version']
+    main_binary = File.join(bin_dir, 'Main.loom')
 
+    puts "[#{t.name}] launching #{t.prerequisites[0]} as #{main_binary}..."
     Dir.chdir('test') do
-      loomlib = "bin/#{const_lib_name}Demo.loom"
-      abort("could not find '#{loomlib}'' to launch") unless File.exists?(loomlib)
+      binary = "bin/#{const_lib_name}Demo.loom"
+      bin_dir = 'bin'
+      abort("could not find '#{binary}'' to launch") unless File.exists?(binary)
 
-      # loomlaunch expects to find Main.loom, so we make a launchable copy here
-      FileUtils.cp(loomlib, 'bin/Main.loom')
+      # loomlaunch expects to find bin/Main.loom, so we make a launchable copy here
+      FileUtils.cp(binary, main_binary)
 
       # capture the interrupt signal from a quit app
       begin
@@ -82,11 +83,16 @@ namespace :demo do
   ].join("\n")
   task :cli, [:options] => DEMO do |t, args|
     args.with_defaults(:options => '')
-    puts "[#{t.name}] executing #{t.prerequisites[0]}..."
 
     sdk_version = test_config['sdk_version']
+    bin_dir = 'bin'
+    main_binary = File.join(bin_dir, 'Main.loom')
 
-    cmd = "#{loomexec(sdk_version)} test/bin/#{const_lib_name}Demo.loom #{args.options}"
+    # loomexec expects to find bin/Main.loom, so we make a launchable copy there
+    puts "[#{t.name}] executing #{t.prerequisites[0]} as #{main_binary}..."
+    Dir.mkdir(bin_dir) unless Dir.exists?(bin_dir)
+    FileUtils.cp(DEMO, main_binary)
+    cmd = "#{loomexec(sdk_version)} #{args.options}"
     try(cmd, "failed to run .loom")
 
     puts ''
