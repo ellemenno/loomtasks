@@ -44,6 +44,19 @@ task :install do |t, args|
 end
 
 desc [
+  "show usage and project info",
+].join("\n")
+task :help do |t, args|
+  system("rake -D")
+
+  puts "Log bugs to: https://github.com/pixeldroid/loomtasks/issues"
+  puts "Project home page: https://github.com/pixeldroid/loomtasks"
+  puts ''
+  puts "Please see the README for additional details."
+  puts ''
+end
+
+desc [
   "report loomtasks version",
 ].join("\n")
 task :version do |t, args|

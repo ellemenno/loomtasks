@@ -221,6 +221,16 @@ namespace :set do
 end
 
 desc [
+  "show detailed usage and project info",
+].join("\n")
+task :help do |t, args|
+  system("rake -D")
+
+  puts "Please see the README for additional details."
+  puts ''
+end
+
+desc [
   "report loomlib version",
 ].join("\n")
 task :version do |t, args|
