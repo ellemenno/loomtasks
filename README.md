@@ -38,24 +38,27 @@ Clone this repo.
 
 Running `rake` in your project directory will execute the default task, which prints the list of available tasks and some useful info:
 
-    Foo v1.2.3 Rakefile running on Ruby 2.3.0 (lib=sprint33, test=sprint33)
+    Foo v1.2.3 Rakefile running on Ruby 2.3.0 (lib=sprint34, test=sprint34)
     rake clean              # removes intermediate files to ensure a clean build
     rake clobber            # removes all generated artifacts to restore project to checkout-like state
-    rake demo:build         # builds FooDemo.loom for sprint33 SDK
+    rake demo:build         # builds FooDemo.loom for sprint34 SDK
     rake demo:cli[options]  # executes FooDemo.loom as a commandline app, with options
     rake demo:gui           # launches FooDemo.loom as a GUI app
-    rake lib:build          # builds Foo.loomlib for sprint33 SDK
-    rake lib:install        # installs Foo.loomlib into sprint33 SDK
+    rake help               # show detailed usage and project info
+    rake lib:build          # builds Foo.loomlib for sprint34 SDK
+    rake lib:install        # installs Foo.loomlib into sprint34 SDK
     rake lib:release        # prepares sdk-specific Foo.loomlib for release, and updates version in README
-    rake lib:show           # lists libs installed for sprint33 SDK
-    rake lib:uninstall      # removes Foo.loomlib from sprint33 SDK
+    rake lib:show           # lists libs installed for sprint34 SDK
+    rake lib:uninstall      # removes Foo.loomlib from sprint34 SDK
+    rake set:sdk[id]        # sets the provided SDK version into lib/loom.config and test/loom.config
+    rake set:version[v]     # sets the library version number into lib/src/Foo.build and lib/src/pixeldroid/cli/Foo.ls
     rake set[sdk]           # sets the provided SDK version into lib/loom.config and test/loom.config
     rake test               # shorthand for rake test:run
-    rake test:build         # builds FooTest.loom against sprint33 SDK
+    rake test:build         # builds FooTest.loom against sprint34 SDK
     rake test:ci            # runs FooTest.loom for CI
     rake test:run           # runs FooTest.loom for the console
-    rake version[v]         # changes the library version number
-    (using loomtasks v1.2.0)
+    rake version            # report loomlib version
+    (using loomtasks v1.2.1)
 
     use `rake -D` for more detailed task descriptions
 

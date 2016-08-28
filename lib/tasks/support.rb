@@ -4,7 +4,7 @@ require 'rbconfig'
 
 module LoomTasks
 
-  VERSION = '1.2.0'
+  VERSION = '2.0.0'
 
   EXIT_OK = 0
 
@@ -23,10 +23,20 @@ module LoomTasks
     fail(failure_message) if (exec_with_echo(cmd) != EXIT_OK)
   end
 
+  def bin_dir()
+    'bin'
+  end
+
+  def main_binary()
+    File.join(bin_dir, 'Main.loom')
+  end
+
   def loomexec(sdk_version)
     # needs to be run in the project root
     # stubbornly, the runner loads bin/Main.loom from the current working directory
-    File.join(sdk_tools(sdk_version), 'loomexec')
+    # weirdly, the runner expects a throw-away arg, so we pass an ignorable something
+    ignorable = '//'
+    "#{File.join(sdk_tools(sdk_version), 'loomexec')} #{ignorable}"
   end
 
   def loomlaunch(sdk_version)
@@ -48,6 +58,10 @@ module LoomTasks
   def lsc(sdk_version)
     # needs to be run in the project root
     File.join(sdk_tools(sdk_version), 'lsc')
+  end
+
+  def global_config_file()
+    File.join(Dir.home, '.loom', 'loom.config')
   end
 
   def sdk_root()
