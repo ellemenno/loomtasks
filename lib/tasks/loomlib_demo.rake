@@ -23,7 +23,7 @@ file DEMO => LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
 
   sdk_version = test_config['sdk_version']
-  file_installed = File.join(sdk_root, sdk_version, 'libs', "#{const_lib_name}.loomlib")
+  file_installed = File.join(sdk_root, sdk_version, 'libs', "#{lib_file}")
 
   Rake::Task['lib:install'].invoke unless FileUtils.uptodate?(file_installed, [LIBRARY])
 
@@ -39,7 +39,7 @@ end
 namespace :demo do
 
   desc [
-    "builds #{const_lib_name}Demo.loom for #{test_config['sdk_version']} SDK",
+    "builds #{DEMO} for #{test_config['sdk_version']} SDK",
     "the SDK is specified in test/loom.config",
     "you can change the SDK with rake set[sdk]",
     "the .loom binary is created in test/bin",
@@ -50,7 +50,7 @@ namespace :demo do
   end
 
   desc [
-    "launches #{const_lib_name}Demo.loom as a GUI app",
+    "launches #{DEMO} as a GUI app",
     "use this launcher if your demo application class extends loom.Application",
     "if your demo is a cli app, remove this task from the list with Rake::Task['demo:gui'].clear",
   ].join("\n")
@@ -74,7 +74,7 @@ namespace :demo do
   end
 
   desc [
-    "executes #{const_lib_name}Demo.loom as a commandline app, with options, if provided",
+    "executes #{DEMO} as a commandline app, with options, if provided",
     "use this launcher if your demo application class extends system.application.ConsoleApplication",
     "if your demo is a gui app, remove this task from the list with Rake::Task['demo:cli'].clear",
   ].join("\n")

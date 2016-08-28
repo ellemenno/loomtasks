@@ -326,7 +326,7 @@ end
 namespace :test do
 
   desc [
-    "builds #{const_lib_name}Test.loom against #{test_config['sdk_version']} SDK",
+    "builds #{APP} against #{test_config['sdk_version']} SDK",
     "the SDK is specified in test/loom.config",
     "you can change the SDK with rake set[sdk]",
     "the .loom binary is created in test/bin",
@@ -337,7 +337,7 @@ namespace :test do
   end
 
   desc [
-    "runs #{const_lib_name}Test.loom for the console",
+    "runs #{APP} for the console",
     "the test runner will print short-form results to stdout",
   ].join("\n")
   task :run => APP do |t, args|
@@ -354,7 +354,7 @@ namespace :test do
   end
 
   desc [
-    "runs #{const_lib_name}Test.loom for CI",
+    "runs #{APP} for CI",
     "in CI mode, the test runner will print long-form results to stdout and generate jUnit compatible reports",
     "the jUnit xml report files are written to the project root, as TEST-*.xml",
   ].join("\n")
