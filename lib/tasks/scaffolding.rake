@@ -3,6 +3,9 @@ require 'fileutils'
 require 'json'
 require 'pathname'
 
+require File.join(File.dirname(__FILE__), 'support')
+include LoomTasks
+
 
 def global_config_file
   File.join(Dir.home, '.loom', 'loom.config')
@@ -13,7 +16,7 @@ def default_loom_sdk
 end
 
 def lib_name()
-  Pathname.new(Dir.pwd).basename.to_s
+  @lib_name || fail("no lib name defined")
 end
 
 def template_dir
@@ -121,12 +124,12 @@ task :default => :usage
 task :usage do |t, args|
   this_file = File.basename(__FILE__)
   puts ''
-  puts "#{this_file}: a utility to create a new loomlib directory structure"
+  puts "#{this_file} v#{VERSION}: a utility to create a new loomlib directory structure"
   puts ''
   puts 'typically this is run from another directory, to bootstrap a new loomlib project there:'
   puts ''
   puts '$ cd MyLoomlib'
-  puts "$ rake -f #{File.join(Dir.home, '.loom', 'tasks', this_file)} new:loomlib"
+  puts "$ rake -f #{File.join(Dir.home, '.loom', 'tasks', this_file)} new:loomlib[MyLoomlib]"
   puts '$ rake'
 end
 
@@ -153,11 +156,21 @@ namespace :new do
     create_from_template(lib_testspec_pathname, lib_testspec_template, binding)
   end
 
+  task :scaffold => [:gitignore, :rakefile, :libdir, :testdir]
+
   desc [
     "scaffolds the directories and files for a new loomlib project",
+    "if no name argument is given, the current directory name is used",
     "creates a .gitignore file, rakefile, and template library and test code",
     "this code assumes (but does not enforce) being run in an empty directory",
   ].join("\n")
-  task :loomlib => [:gitignore, :rakefile, :libdir, :testdir]
+  task :loomlib, [:name] do |t, args|
+    args.with_defaults(:name => Pathname.new(Dir.pwd).basename.to_s)
+    @lib_name = args.name
+
+    Rake::Task['new:scaffold'].invoke()
+    puts "project prepared to generate #{lib_name}.loomlib"
+    puts "run `rake` to see available tasks"
+  end
 
 end
