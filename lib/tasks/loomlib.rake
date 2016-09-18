@@ -171,11 +171,7 @@ file APP => LIBRARY do |t, args|
   puts ''
 end
 
-FileList[File.join('test', 'src', 'app', '*.ls')].each do |src|
-  file APP => src
-end
-
-FileList[File.join('test', 'src', 'spec', '*.ls')].each do |src|
+FileList[File.join('test', 'src', '**', '*.ls')].each do |src|
   file APP => src
 end
 
