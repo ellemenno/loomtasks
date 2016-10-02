@@ -55,6 +55,8 @@ def update_lib_version(new_value)
   )
 end
 
+# LIBRARY const defined at top level in loomlib.rake
+
 [
   File.join('lib', 'build', '**'),
 ].each { |f| CLEAN << f }
@@ -82,7 +84,7 @@ end
 
 
 desc [
-  "report loomlib version",
+  "reports loomlib version",
 ].join("\n")
 task :version do |t, args|
   puts "#{lib_name} v#{LoomTasks::lib_version(lib_version_file)}"

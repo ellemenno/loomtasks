@@ -79,7 +79,7 @@ namespace :list do
     ].join("\n")
   task :available do |t, args|
     if Dir.exists?(available_tasks_dir)
-      puts("available files in #{available_tasks_dir}:")
+      puts("files available in #{available_tasks_dir}:")
       project_root  = Pathname.new(available_tasks_dir)
       Dir.glob(File.join("#{available_tasks_dir}", '**', '*')).reject { |f| File.directory?(f) }.each do |f|
         puts(Pathname.new(f).relative_path_from(project_root).to_s)
@@ -97,7 +97,7 @@ namespace :list do
   ].join("\n")
   task :installed do |t, args|
     if Dir.exists?(installed_tasks_dir)
-      puts("installed tasks in #{installed_tasks_dir}:")
+      puts("files installed in #{installed_tasks_dir}:")
       project_root  = Pathname.new(installed_tasks_dir)
       Dir.glob(File.join("#{installed_tasks_dir}", '**', '*')).reject { |f| File.directory?(f) }.each do |f|
         puts(Pathname.new(f).relative_path_from(project_root).to_s)
