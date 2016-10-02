@@ -39,7 +39,7 @@ file TEST => LIBRARY do |t, args|
 
   Dir.chdir('test') do
     Dir.mkdir('bin') unless Dir.exists?('bin')
-    cmd = "#{LoomTasks::lsc(sdk_version)} #{LoomTasks::const_lib_name}Test.build --project #{Dir.pwd}"
+    cmd = "#{LoomTasks::lsc(sdk_version)} #{LoomTasks::const_lib_name}Test.build"
     try(cmd, "failed to compile .loom")
   end
 

@@ -19,8 +19,7 @@ def compile_demo(dir, build_file, demo_config)
 
   Dir.chdir(dir) do
     Dir.mkdir('bin') unless Dir.exists?('bin')
-    # cmd = "#{LoomTasks::lsc(sdk_version)} #{build_file}"
-    cmd = "#{LoomTasks::lsc(sdk_version)} #{build_file} --project #{Dir.pwd}"
+    cmd = "#{LoomTasks::lsc(sdk_version)} #{build_file}"
     try(cmd, "failed to compile .loom")
   end
 end
