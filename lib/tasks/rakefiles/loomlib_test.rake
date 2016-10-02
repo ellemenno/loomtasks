@@ -65,29 +65,6 @@ namespace :test do
   end
 
   desc [
-    "runs #{TEST} for the console",
-    "the test runner will print short-form results to stdout",
-  ].join("\n")
-  task :run => TEST do |t, args|
-    sdk_version = test_config['sdk_version']
-    binary = t.prerequisites[0]
-    main = File.join('test', LoomTasks::main_binary)
-
-    puts "[#{t.name}] executing #{binary} as #{main}..."
-    abort("could not find '#{binary}' to launch") unless File.exists?(binary)
-
-    # loomexec expects to find bin/Main.loom, so we make a launchable copy there
-    FileUtils.cp(binary, main)
-
-    Dir.chdir('test') do
-      cmd = "#{loomexec(sdk_version)} --format ansi"
-      try(cmd, "tests failed")
-    end
-
-    puts ''
-  end
-
-  desc [
     "runs #{TEST} for CI",
     "in CI mode, the test runner will print long-form results to stdout and generate jUnit compatible reports",
     "the jUnit xml report files are written to the project root, as TEST-*.xml",
@@ -105,6 +82,29 @@ namespace :test do
 
     Dir.chdir('test') do
       cmd = "#{loomexec(sdk_version)} --format junit --format console"
+      try(cmd, "tests failed")
+    end
+
+    puts ''
+  end
+
+  desc [
+    "runs #{TEST} for the console",
+    "the test runner will print short-form results to stdout",
+  ].join("\n")
+  task :run => TEST do |t, args|
+    sdk_version = test_config['sdk_version']
+    binary = t.prerequisites[0]
+    main = File.join('test', LoomTasks::main_binary)
+
+    puts "[#{t.name}] executing #{binary} as #{main}..."
+    abort("could not find '#{binary}' to launch") unless File.exists?(binary)
+
+    # loomexec expects to find bin/Main.loom, so we make a launchable copy there
+    FileUtils.cp(binary, main)
+
+    Dir.chdir('test') do
+      cmd = "#{loomexec(sdk_version)} --format ansi"
       try(cmd, "tests failed")
     end
 
