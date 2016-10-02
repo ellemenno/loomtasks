@@ -114,7 +114,7 @@ namespace :lib do
 
     if File.exists?(readme_file)
       puts "[#{t.name}] updating README to reference version #{lib_version} and sdk '#{sdk}'"
-      LoomTasks::update_readme_version(lib_version, sdk)
+      LoomTasks::update_readme_version(readme_file, lib_version, sdk)
     else
       puts "[#{t.name}] skipped updating README (none found)"
     end
