@@ -74,8 +74,6 @@ file LIBRARY do |t, args|
     cmd = "#{LoomTasks::lsc(sdk_version)} #{lib_name}.build"
     try(cmd, "failed to compile .loomlib")
   end
-
-  puts ''
 end
 
 FileList[File.join('lib', 'src', '**', '*.ls')].each do |src|
@@ -88,7 +86,6 @@ desc [
 ].join("\n")
 task :version do |t, args|
   puts "#{lib_name} v#{LoomTasks::lib_version(lib_version_file)}"
-  puts ''
 end
 
 namespace :lib do
@@ -101,7 +98,6 @@ namespace :lib do
   ].join("\n")
   task :build => LIBRARY do |t, args|
     puts "[#{t.name}] task completed, find .loomlib in lib/build/"
-    puts ''
   end
 
   desc [
@@ -129,7 +125,6 @@ namespace :lib do
     FileUtils.copy(lib, "#{release_dir}/#{lib_release}")
 
     puts "[#{t.name}] task completed, find #{lib_release} in #{release_dir}/"
-    puts ''
   end
 
   desc [
@@ -147,7 +142,6 @@ namespace :lib do
     write_lib_config(lib_config)
 
     puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
-    puts ''
   end
 
   desc [
@@ -166,7 +160,6 @@ namespace :lib do
     update_lib_version(lib_version)
 
     puts "[#{t.name}] task completed, lib version updated to #{lib_version}"
-    puts ''
   end
 
   desc [
@@ -180,7 +173,6 @@ namespace :lib do
     FileUtils.cp(lib, LoomTasks::libs_path(sdk_version))
 
     puts "[#{t.name}] task completed, #{lib_file} installed for #{sdk_version}"
-    puts ''
   end
 
   desc [
@@ -196,7 +188,6 @@ namespace :lib do
     else
       puts "[#{t.name}] nothing to do;  no #{lib_file} found in #{sdk_version} sdk"
     end
-    puts ''
   end
 
   desc [
@@ -210,8 +201,6 @@ namespace :lib do
 
     puts("installed libs in #{lib_dir}")
     Dir.glob(File.join(lib_dir, '*')).each { |f| puts(File.basename(f)) }
-
-    puts ''
   end
 
 end

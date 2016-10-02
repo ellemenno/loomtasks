@@ -42,8 +42,6 @@ file TEST => LIBRARY do |t, args|
     cmd = "#{LoomTasks::lsc(sdk_version)} #{LoomTasks::const_lib_name}Test.build"
     try(cmd, "failed to compile .loom")
   end
-
-  puts ''
 end
 
 FileList[File.join('test', 'src', '**', '*.ls')].each do |src|
@@ -61,7 +59,6 @@ namespace :test do
   ].join("\n")
   task :build => TEST do |t, args|
     puts "[#{t.name}] task completed, find .loom in test/bin/"
-    puts ''
   end
 
   desc [
@@ -84,8 +81,6 @@ namespace :test do
       cmd = "#{loomexec(sdk_version)} --format junit --format console"
       try(cmd, "tests failed")
     end
-
-    puts ''
   end
 
   desc [
@@ -107,8 +102,6 @@ namespace :test do
       cmd = "#{loomexec(sdk_version)} --format ansi"
       try(cmd, "tests failed")
     end
-
-    puts ''
   end
 
   desc [
@@ -126,7 +119,6 @@ namespace :test do
     write_test_config(test_config)
 
     puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
-    puts ''
   end
 
 end

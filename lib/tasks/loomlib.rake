@@ -95,5 +95,4 @@ task :sdk, [:id] do |t, args|
   Rake::Task['test:sdk'].invoke(sdk_version)
 
   puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
-  puts ''
 end

@@ -62,10 +62,7 @@ DEMO_GUI = File.join('gui', 'bin', "#{LoomTasks::const_lib_name}DemoGUI.loom")
 
 file DEMO_CLI => LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
-
   compile_demo('cli', "#{LoomTasks::const_lib_name}DemoCLI.build", cli_config)
-
-  puts ''
 end
 
 FileList[File.join('cli', 'src', '**', '*.ls')].each do |src|
@@ -74,10 +71,7 @@ end
 
 file DEMO_GUI => LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
-
   compile_demo('gui', "#{LoomTasks::const_lib_name}DemoGUI.build", gui_config)
-
-  puts ''
 end
 
 FileList[File.join('gui', 'src', '**', '*.ls')].each do |src|
@@ -95,7 +89,6 @@ namespace :cli do
   ].join("\n")
   task :build => DEMO_CLI do |t, args|
     puts "[#{t.name}] task completed, find .loom in cli/bin/"
-    puts ''
   end
 
   desc [
@@ -120,8 +113,6 @@ namespace :cli do
       cmd = "#{LoomTasks::loomexec(sdk_version)} #{args.options}"
       try(cmd, "failed to exec .loom")
     end
-
-    puts ''
   end
 
   desc [
@@ -139,7 +130,6 @@ namespace :cli do
     write_cli_config(cli_config)
 
     puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
-    puts ''
   end
 
 end
@@ -155,7 +145,6 @@ namespace :gui do
   ].join("\n")
   task :build => DEMO_GUI do |t, args|
     puts "[#{t.name}] task completed, find .loom in gui/bin/"
-    puts ''
   end
 
   desc [
@@ -200,7 +189,6 @@ namespace :gui do
     write_gui_config(gui_config)
 
     puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
-    puts ''
   end
 
 end
