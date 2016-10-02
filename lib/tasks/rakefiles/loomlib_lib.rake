@@ -186,7 +186,7 @@ namespace :lib do
       FileUtils.rm_r(installed_lib)
       puts "[#{t.name}] task completed, #{lib_file} removed from #{sdk_version}"
     else
-      puts "[#{t.name}] nothing to do;  no #{lib_file} found in #{sdk_version} sdk"
+      puts "[#{t.name}] nothing to do; no #{lib_file} found in #{sdk_version} sdk"
     end
   end
 

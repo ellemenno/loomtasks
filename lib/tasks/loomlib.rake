@@ -94,5 +94,5 @@ task :sdk, [:id] do |t, args|
   Rake::Task['gui:sdk'].invoke(sdk_version)
   Rake::Task['test:sdk'].invoke(sdk_version)
 
-  puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
+  puts "[#{t.name}] task completed, all loom.configs updated to #{sdk_version}"
 end
