@@ -35,14 +35,14 @@ LIBRARY = File.join('lib', 'build', "#{LoomTasks::const_lib_name}.loomlib")
 
 Dir.glob(File.join(File.dirname(__FILE__), 'rakefiles', '*.rake')).each { |r| load r }
 
-[File.join('bin', '**')].each { |f| CLEAN << f }
+[File.join('releases', '**')].each { |f| CLEAN << f }
 Rake::Task[:clean].clear_comments()
 Rake::Task[:clean].add_description([
   "removes intermediate files to ensure a clean build",
   "running now would delete the following:\n  #{CLEAN.resolve.join("\n  ")}",
 ].join("\n"))
 
-['bin', 'releases'].each { |f| CLOBBER << f }
+['releases'].each { |f| CLOBBER << f }
 Rake::Task[:clobber].enhance(['lib:uninstall'])
 Rake::Task[:clobber].clear_comments()
 Rake::Task[:clobber].add_description([
