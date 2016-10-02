@@ -12,14 +12,14 @@ def test_config_file()
 end
 
 def test_config()
-  @test_loom_config || (@test_loom_config = LoomTasks::parse_loom_config(test_config_file))
+  @test_loom_config || (@test_loom_config = LoomTasks.parse_loom_config(test_config_file))
 end
 
 def write_test_config(config)
-  LoomTasks::write_loom_config(test_config_file, config)
+  LoomTasks.write_loom_config(test_config_file, config)
 end
 
-TEST = File.join('test', 'bin', "#{LoomTasks::const_lib_name}Test.loom")
+TEST = File.join('test', 'bin', "#{LoomTasks.const_lib_name}Test.loom")
 
 [
   File.join('test', 'bin', '**'),
@@ -39,7 +39,7 @@ file TEST => LIBRARY do |t, args|
 
   Dir.chdir('test') do
     Dir.mkdir('bin') unless Dir.exists?('bin')
-    cmd = "#{LoomTasks::lsc(sdk_version)} #{LoomTasks::const_lib_name}Test.build"
+    cmd = "#{LoomTasks.lsc(sdk_version)} #{LoomTasks.const_lib_name}Test.build"
     try(cmd, "failed to compile .loom")
   end
 end
@@ -69,7 +69,7 @@ namespace :test do
   task :ci => TEST do |t, args|
     sdk_version = test_config['sdk_version']
     binary = t.prerequisites[0]
-    main = File.join('test', LoomTasks::main_binary)
+    main = File.join('test', LoomTasks.main_binary)
 
     puts "[#{t.name}] executing #{binary} as #{main}..."
     abort("could not find '#{binary}' to launch") unless File.exists?(binary)
@@ -90,7 +90,7 @@ namespace :test do
   task :run => TEST do |t, args|
     sdk_version = test_config['sdk_version']
     binary = t.prerequisites[0]
-    main = File.join('test', LoomTasks::main_binary)
+    main = File.join('test', LoomTasks.main_binary)
 
     puts "[#{t.name}] executing #{binary} as #{main}..."
     abort("could not find '#{binary}' to launch") unless File.exists?(binary)
@@ -111,7 +111,7 @@ namespace :test do
   task :sdk, [:id] do |t, args|
     args.with_defaults(:id => default_sdk)
     sdk_version = args.id
-    lib_dir = LoomTasks::libs_path(sdk_version)
+    lib_dir = LoomTasks.libs_path(sdk_version)
 
     fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 

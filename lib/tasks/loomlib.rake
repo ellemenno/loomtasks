@@ -26,10 +26,10 @@ def default_sdk
 end
 
 def global_config()
-  @global_loom_config || (@global_loom_config = LoomTasks::parse_loom_config(LoomTasks::global_config_file))
+  @global_loom_config || (@global_loom_config = LoomTasks.parse_loom_config(LoomTasks.global_config_file))
 end
 
-LIBRARY = File.join('lib', 'build', "#{LoomTasks::const_lib_name}.loomlib")
+LIBRARY = File.join('lib', 'build', "#{LoomTasks.const_lib_name}.loomlib")
 
 Dir.glob(File.join(File.dirname(__FILE__), 'rakefiles', '*.rake')).each { |r| load r }
 
@@ -52,7 +52,7 @@ Rake::Task[:clobber].add_description([
 task :default => :list_targets
 
 task :list_targets => :check_consts do |t, args|
-  a = "#{LoomTasks::const_lib_name} v#{LoomTasks::lib_version(const_lib_version_file)} Rakefile"
+  a = "#{LoomTasks.const_lib_name} v#{LoomTasks.lib_version(const_lib_version_file)} Rakefile"
   b = "running on Ruby #{RUBY_VERSION}"
   puts "#{a} #{b}"
   system("rake -T")
@@ -60,8 +60,8 @@ task :list_targets => :check_consts do |t, args|
 end
 
 task :check_consts do |t, args|
-  fail("please define the LIB_NAME constant before loading #{File.basename(__FILE__)}") unless LoomTasks::const_lib_name
-  fail("please define the LIB_VERSION_FILE constant before loading #{File.basename(__FILE__)}") unless LoomTasks::const_lib_version_file
+  fail("please define the LIB_NAME constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_name
+  fail("please define the LIB_VERSION_FILE constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_version_file
 end
 
 
@@ -81,7 +81,7 @@ desc [
 task :sdk, [:id] do |t, args|
   args.with_defaults(:id => default_sdk)
   sdk_version = args.id
-  lib_dir = LoomTasks::libs_path(sdk_version)
+  lib_dir = LoomTasks.libs_path(sdk_version)
 
   fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 

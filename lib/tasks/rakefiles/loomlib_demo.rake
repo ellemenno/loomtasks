@@ -9,7 +9,7 @@ include LoomTasks
 @gui_loom_config = nil
 
 def ensure_lib_uptodate(sdk_version)
-  file_installed = File.join(LoomTasks::libs_path(sdk_version), "#{LoomTasks::const_lib_name}.loomlib")
+  file_installed = File.join(LoomTasks.libs_path(sdk_version), "#{LoomTasks.const_lib_name}.loomlib")
   Rake::Task['lib:install'].invoke unless FileUtils.uptodate?(file_installed, [LIBRARY])
 end
 
@@ -19,17 +19,17 @@ def compile_demo(dir, build_file, demo_config)
 
   Dir.chdir(dir) do
     Dir.mkdir('bin') unless Dir.exists?('bin')
-    cmd = "#{LoomTasks::lsc(sdk_version)} #{build_file}"
+    cmd = "#{LoomTasks.lsc(sdk_version)} #{build_file}"
     try(cmd, "failed to compile .loom")
   end
 end
 
 def cli_config()
-  @cli_loom_config || (@cli_loom_config = LoomTasks::parse_loom_config(cli_config_file))
+  @cli_loom_config || (@cli_loom_config = LoomTasks.parse_loom_config(cli_config_file))
 end
 
 def gui_config()
-  @gui_loom_config || (@gui_loom_config = LoomTasks::parse_loom_config(gui_config_file))
+  @gui_loom_config || (@gui_loom_config = LoomTasks.parse_loom_config(gui_config_file))
 end
 
 def cli_config_file()
@@ -41,15 +41,15 @@ def gui_config_file()
 end
 
 def write_cli_config(config)
-  LoomTasks::write_loom_config(cli_config_file, config)
+  LoomTasks.write_loom_config(cli_config_file, config)
 end
 
 def write_gui_config(config)
-  LoomTasks::write_loom_config(gui_config_file, config)
+  LoomTasks.write_loom_config(gui_config_file, config)
 end
 
-DEMO_CLI = File.join('cli', 'bin', "#{LoomTasks::const_lib_name}DemoCLI.loom")
-DEMO_GUI = File.join('gui', 'bin', "#{LoomTasks::const_lib_name}DemoGUI.loom")
+DEMO_CLI = File.join('cli', 'bin', "#{LoomTasks.const_lib_name}DemoCLI.loom")
+DEMO_GUI = File.join('gui', 'bin', "#{LoomTasks.const_lib_name}DemoGUI.loom")
 
 [
   File.join('cli', 'bin', '**'),
@@ -62,7 +62,7 @@ DEMO_GUI = File.join('gui', 'bin', "#{LoomTasks::const_lib_name}DemoGUI.loom")
 
 file DEMO_CLI => LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
-  compile_demo('cli', "#{LoomTasks::const_lib_name}DemoCLI.build", cli_config)
+  compile_demo('cli', "#{LoomTasks.const_lib_name}DemoCLI.build", cli_config)
 end
 
 FileList[File.join('cli', 'src', '**', '*.ls')].each do |src|
@@ -71,7 +71,7 @@ end
 
 file DEMO_GUI => LIBRARY do |t, args|
   puts "[file] creating #{t.name}..."
-  compile_demo('gui', "#{LoomTasks::const_lib_name}DemoGUI.build", gui_config)
+  compile_demo('gui', "#{LoomTasks.const_lib_name}DemoGUI.build", gui_config)
 end
 
 FileList[File.join('gui', 'src', '**', '*.ls')].each do |src|
@@ -101,7 +101,7 @@ namespace :cli do
 
     sdk_version = cli_config['sdk_version']
     binary = t.prerequisites[0]
-    main = File.join('cli', LoomTasks::main_binary)
+    main = File.join('cli', LoomTasks.main_binary)
 
     puts "[#{t.name}] executing #{binary} as #{main}..."
     abort("could not find '#{binary}' to launch") unless File.exists?(binary)
@@ -110,7 +110,7 @@ namespace :cli do
     FileUtils.cp(binary, main)
 
     Dir.chdir('cli') do
-      cmd = "#{LoomTasks::loomexec(sdk_version)} #{args.options}"
+      cmd = "#{LoomTasks.loomexec(sdk_version)} #{args.options}"
       try(cmd, "failed to exec .loom")
     end
   end
@@ -122,7 +122,7 @@ namespace :cli do
   task :sdk, [:id] do |t, args|
     args.with_defaults(:id => default_sdk)
     sdk_version = args.id
-    lib_dir = LoomTasks::libs_path(sdk_version)
+    lib_dir = LoomTasks.libs_path(sdk_version)
 
     fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 
@@ -155,7 +155,7 @@ namespace :gui do
   task :run => DEMO_GUI do |t, args|
     sdk_version = gui_config['sdk_version']
     binary = t.prerequisites[0]
-    main = File.join('gui', LoomTasks::main_binary)
+    main = File.join('gui', LoomTasks.main_binary)
 
     puts "[#{t.name}] executing #{binary} as #{main}..."
     abort("could not find '#{binary}' to launch") unless File.exists?(binary)
@@ -166,7 +166,7 @@ namespace :gui do
     Dir.chdir('gui') do
       # capture the interrupt signal from a quit app
       begin
-        cmd = LoomTasks::loomlaunch(sdk_version)
+        cmd = LoomTasks.loomlaunch(sdk_version)
         try(cmd, "failed to launch .loom")
       rescue Exception => e
         puts ' (quit)'
@@ -181,7 +181,7 @@ namespace :gui do
   task :sdk, [:id] do |t, args|
     args.with_defaults(:id => default_sdk)
     sdk_version = args.id
-    lib_dir = LoomTasks::libs_path(sdk_version)
+    lib_dir = LoomTasks.libs_path(sdk_version)
 
     fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 

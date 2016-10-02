@@ -125,7 +125,7 @@ module LoomTasks
 
   def lib_version(version_file)
     File.open(version_file, 'r') do |f|
-      matches = f.read.scan(LoomTasks::lib_version_regex)
+      matches = f.read.scan(lib_version_regex)
       raise("No version const defined in #{lib_version_file}") if matches.empty?
       matches.first[2]
     end

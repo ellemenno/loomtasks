@@ -20,19 +20,19 @@ def lib_file()
 end
 
 def lib_name()
-  LoomTasks::const_lib_name
+  LoomTasks.const_lib_name
 end
 
 def lib_version_file()
-  LoomTasks::const_lib_version_file
+  LoomTasks.const_lib_version_file
 end
 
 def lib_config()
-  @lib_loom_config || (@lib_loom_config = LoomTasks::parse_loom_config(lib_config_file))
+  @lib_loom_config || (@lib_loom_config = LoomTasks.parse_loom_config(lib_config_file))
 end
 
 def lib_build_config()
-  @lib_build_config || (@lib_build_config = LoomTasks::parse_loom_config(lib_build_file))
+  @lib_build_config || (@lib_build_config = LoomTasks.parse_loom_config(lib_build_file))
 end
 
 def readme_file()
@@ -40,18 +40,18 @@ def readme_file()
 end
 
 def write_lib_config(config)
-  LoomTasks::write_loom_config(lib_config_file, config)
+  LoomTasks.write_loom_config(lib_config_file, config)
 end
 
 def write_lib_build_config(config)
-  LoomTasks::write_loom_config(lib_build_file, config)
+  LoomTasks.write_loom_config(lib_build_file, config)
 end
 
 def update_lib_version(new_value)
-  old_value = LoomTasks::lib_version(lib_version_file) # force the check for an existing version
+  old_value = LoomTasks.lib_version(lib_version_file) # force the check for an existing version
   IO.write(
     lib_version_file,
-    File.open(lib_version_file, 'r') { |f| f.read.gsub!(LoomTasks::lib_version_regex, '\1\2'+new_value+'\4') }
+    File.open(lib_version_file, 'r') { |f| f.read.gsub!(LoomTasks.lib_version_regex, '\1\2'+new_value+'\4') }
   )
 end
 
@@ -71,7 +71,7 @@ file LIBRARY do |t, args|
 
   Dir.chdir('lib') do
     Dir.mkdir('build') unless Dir.exists?('build')
-    cmd = "#{LoomTasks::lsc(sdk_version)} #{lib_name}.build"
+    cmd = "#{LoomTasks.lsc(sdk_version)} #{lib_name}.build"
     try(cmd, "failed to compile .loomlib")
   end
 end
@@ -85,7 +85,7 @@ desc [
   "reports loomlib version",
 ].join("\n")
 task :version do |t, args|
-  puts "#{lib_name} v#{LoomTasks::lib_version(lib_version_file)}"
+  puts "#{lib_name} v#{LoomTasks.lib_version(lib_version_file)}"
 end
 
 namespace :lib do
@@ -110,11 +110,11 @@ namespace :lib do
     ext = '.loomlib'
     release_dir = 'releases'
     lib = t.prerequisites[0]
-    lib_version = LoomTasks::lib_version(lib_version_file)
+    lib_version = LoomTasks.lib_version(lib_version_file)
 
     if File.exists?(readme_file)
       puts "[#{t.name}] updating README to reference version #{lib_version} and sdk '#{sdk}'"
-      LoomTasks::update_readme_version(readme_file, lib_version, sdk)
+      LoomTasks.update_readme_version(readme_file, lib_version, sdk)
     else
       puts "[#{t.name}] skipped updating README (none found)"
     end
@@ -134,7 +134,7 @@ namespace :lib do
   task :sdk, [:id] => 'lib:uninstall' do |t, args|
     args.with_defaults(:id => default_sdk)
     sdk_version = args.id
-    lib_dir = LoomTasks::libs_path(sdk_version)
+    lib_dir = LoomTasks.libs_path(sdk_version)
 
     fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 
@@ -170,7 +170,7 @@ namespace :lib do
     sdk_version = lib_config['sdk_version']
     lib = t.prerequisites[0]
 
-    FileUtils.cp(lib, LoomTasks::libs_path(sdk_version))
+    FileUtils.cp(lib, LoomTasks.libs_path(sdk_version))
 
     puts "[#{t.name}] task completed, #{lib_file} installed for #{sdk_version}"
   end
@@ -180,7 +180,7 @@ namespace :lib do
   ].join("\n")
   task :uninstall do |t, args|
     sdk_version = lib_config['sdk_version']
-    installed_lib = File.join(LoomTasks::libs_path(sdk_version), lib_file)
+    installed_lib = File.join(LoomTasks.libs_path(sdk_version), lib_file)
 
     if (File.exists?(installed_lib))
       FileUtils.rm_r(installed_lib)
@@ -197,7 +197,7 @@ namespace :lib do
   ].join("\n")
   task :show do |t, args|
     sdk_version = lib_config['sdk_version']
-    lib_dir = LoomTasks::libs_path(sdk_version)
+    lib_dir = LoomTasks.libs_path(sdk_version)
 
     puts("installed libs in #{lib_dir}")
     Dir.glob(File.join(lib_dir, '*')).each { |f| puts(File.basename(f)) }
