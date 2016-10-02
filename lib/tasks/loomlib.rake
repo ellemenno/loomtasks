@@ -57,9 +57,6 @@ task :list_targets => :check_consts do |t, args|
   puts "#{a} #{b}"
   system("rake -T")
   puts "(using loomtasks v#{LoomTasks::VERSION})"
-  puts ''
-  puts 'use `rake -D` for more detailed task descriptions'
-  puts ''
 end
 
 task :check_consts do |t, args|
@@ -75,7 +72,6 @@ task :help do |t, args|
   system("rake -D")
 
   puts "Please see the README for additional details."
-  puts ''
 end
 
 desc [

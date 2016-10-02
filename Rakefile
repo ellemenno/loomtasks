@@ -27,14 +27,11 @@ task :list_targets do |t, args|
   b = "running on Ruby #{RUBY_VERSION}"
   puts "#{a} #{b}"
   system("rake -T")
-  puts ''
-  puts 'use `rake -D` for more detailed task descriptions'
-  puts ''
 end
 
 desc [
   "installs rake task files for Loom",
-  "task files are installed to #{installed_tasks_dir}"
+  "files will be installed to #{installed_tasks_dir}"
 ].join("\n")
 task :install do |t, args|
   Dir.mkdir(installed_tasks_dir) unless Dir.exists?(installed_tasks_dir)
@@ -47,11 +44,10 @@ task :install do |t, args|
   FileUtils.cp_r(Dir.glob(File.join('lib', 'tasks', 'templates', '*')), installed_templates_dir)
 
   puts "[#{t.name}] task completed, tasks installed to #{installed_tasks_dir}"
-  puts ''
 end
 
 desc [
-  "show usage and project info",
+  "shows usage and project info",
 ].join("\n")
 task :help do |t, args|
   system("rake -D")
@@ -60,7 +56,6 @@ task :help do |t, args|
   puts "Project home page: https://github.com/pixeldroid/loomtasks"
   puts ''
   puts "Please see the README for additional details."
-  puts ''
 end
 
 desc [
@@ -87,8 +82,6 @@ namespace :list do
     else
       puts "[#{t.name}] no files are available at #{available_tasks_dir}"
     end
-
-    puts ''
   end
 
   desc [
@@ -105,8 +98,6 @@ namespace :list do
     else
       puts "[#{t.name}] no files are installed at #{installed_tasks_dir}"
     end
-
-    puts ''
   end
 
 end
@@ -114,11 +105,10 @@ end
 desc [
   "removes the tasks folder from the Loom home directory",
   "the task folder is #{installed_tasks_dir}",
-  "the entire tasks folder is removed, so use with caution if you happened to put anything in there",
+  "the entire tasks folder will be removed, so use with caution if you happened to put anything in there",
 ].join("\n")
 task :uninstall do |t, args|
   FileUtils.rm_r(installed_tasks_dir) if Dir.exists?(installed_tasks_dir)
 
   puts "[#{t.name}] task completed, #{installed_tasks_dir} was removed"
-  puts ''
 end
