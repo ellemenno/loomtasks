@@ -68,50 +68,6 @@ task :check_consts do |t, args|
 end
 
 
-# namespace :set do
-
-#   desc [
-#     "sets the provided SDK version into #{lib_config_file} and #{test_config_file}",
-#     "this updates #{lib_config_file} to define which SDK will compile the loomlib and be the install target",
-#     "this updates #{test_config_file} to define which SDK will compile the test app and demo app",
-#   ].join("\n")
-#   task :sdk, [:id] => 'lib:uninstall' do |t, args|
-#     args.with_defaults(:id => default_sdk)
-#     sdk_version = args.id
-#     lib_dir = libs_path(sdk_version)
-
-#     fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
-
-#     lib_config['sdk_version'] = sdk_version
-#     test_config['sdk_version'] = sdk_version
-
-#     write_lib_config(lib_config)
-#     write_test_config(test_config)
-
-#     puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
-#     puts ''
-#   end
-
-#   desc [
-#     "sets the library version number into #{lib_build_file} and #{lib_version_file}",
-#     "#{lib_version_file} is expected to have a line matching:",
-#     "#{lib_version_regex.to_s}",
-#   ].join("\n")
-#   task :version, [:v] do |t, args|
-#     args.with_defaults(:v => '1.0.0')
-#     lib_version = args.v
-
-#     lib_build_config['version'] = lib_version
-#     lib_build_config['modules'].first['version'] = lib_version
-
-#     write_lib_build_config(lib_build_config)
-#     update_lib_version(lib_version)
-
-#     puts "[#{t.name}] task completed, lib version updated to #{lib_version}"
-#     puts ''
-#   end
-# end
-
 desc [
   "show detailed usage and project info",
 ].join("\n")
@@ -119,5 +75,25 @@ task :help do |t, args|
   system("rake -D")
 
   puts "Please see the README for additional details."
+  puts ''
+end
+
+desc [
+  "sets the provided SDK version in the config files of lib, cli, gui, and test",
+  "each config file can also be set independently, using the namespaced tasks provided",
+].join("\n")
+task :sdk, [:id] do |t, args|
+  args.with_defaults(:id => default_sdk)
+  sdk_version = args.id
+  lib_dir = LoomTasks::libs_path(sdk_version)
+
+  fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
+
+  Rake::Task['lib:sdk'].invoke(sdk_version)
+  Rake::Task['cli:sdk'].invoke(sdk_version)
+  Rake::Task['gui:sdk'].invoke(sdk_version)
+  Rake::Task['test:sdk'].invoke(sdk_version)
+
+  puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
   puts ''
 end

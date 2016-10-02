@@ -111,6 +111,24 @@ namespace :test do
     puts ''
   end
 
+  desc [
+    "sets the provided SDK version into #{test_config_file}",
+    "this updates #{test_config_file} to define which SDK will compile the test apps",
+  ].join("\n")
+  task :sdk, [:id] do |t, args|
+    args.with_defaults(:id => default_sdk)
+    sdk_version = args.id
+    lib_dir = LoomTasks::libs_path(sdk_version)
+
+    fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
+
+    test_config['sdk_version'] = sdk_version
+    write_test_config(test_config)
+
+    puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
+    puts ''
+  end
+
 end
 
 desc [

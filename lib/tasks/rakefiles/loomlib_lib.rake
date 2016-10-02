@@ -133,6 +133,43 @@ namespace :lib do
   end
 
   desc [
+    "sets the provided SDK version into #{lib_config_file}",
+    "this updates #{lib_config_file} to define which SDK will compile the loomlib and be the install target",
+  ].join("\n")
+  task :sdk, [:id] => 'lib:uninstall' do |t, args|
+    args.with_defaults(:id => default_sdk)
+    sdk_version = args.id
+    lib_dir = LoomTasks::libs_path(sdk_version)
+
+    fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
+
+    lib_config['sdk_version'] = sdk_version
+    write_lib_config(lib_config)
+
+    puts "[#{t.name}] task completed, sdk updated to #{sdk_version}"
+    puts ''
+  end
+
+  desc [
+    "sets the library version number into #{lib_build_file} and #{lib_version_file}",
+    "#{lib_version_file} is expected to have a line matching:",
+    "#{lib_version_regex.to_s}",
+  ].join("\n")
+  task :version, [:v] do |t, args|
+    args.with_defaults(:v => '1.0.0')
+    lib_version = args.v
+
+    lib_build_config['version'] = lib_version
+    lib_build_config['modules'].first['version'] = lib_version
+
+    write_lib_build_config(lib_build_config)
+    update_lib_version(lib_version)
+
+    puts "[#{t.name}] task completed, lib version updated to #{lib_version}"
+    puts ''
+  end
+
+  desc [
     "installs #{lib_file} into #{lib_config['sdk_version']} SDK",
     "this makes it available to reference in .build files of any project targeting #{lib_config['sdk_version']}",
   ].join("\n")
