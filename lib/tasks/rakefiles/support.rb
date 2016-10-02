@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'json'
 require 'rbconfig'
 
 module LoomTasks
@@ -99,7 +100,7 @@ module LoomTasks
   end
 
   def write_loom_config(file, config)
-    File.open(file, 'w') { |f| f.write(JSON.pretty_generate(config)) }
+    File.open(file, 'w') { |f| f.write("#{JSON.pretty_generate(config)}\n") }
   end
 
   def const_find(name)

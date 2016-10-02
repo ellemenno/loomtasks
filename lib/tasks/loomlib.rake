@@ -12,9 +12,7 @@
 #
 #   rake -f ~/.loom/tasks/scaffolding.rake new:loomlib[MyLibName]
 
-require 'etc'
 require 'fileutils'
-require 'json'
 require 'rake/clean'
 
 require File.join(File.dirname(__FILE__), 'rakefiles', 'support')
