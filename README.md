@@ -94,7 +94,7 @@ The loomlib rake tasks make the following assumptions about the layout of a proj
 
 #### demos
 
-Support for demo tasks comes from [`loomlib_demo.rake`][lib/tasks/rakefiles/loomlib_demo.rake].
+Support for demo tasks comes from [`loomlib_demo.rake`](lib/tasks/rakefiles/loomlib_demo.rake).
 
 `cli/` contains a command line demonstration app. <br>
 
@@ -130,7 +130,7 @@ Support for demo tasks comes from [`loomlib_demo.rake`][lib/tasks/rakefiles/loom
 
 #### lib
 
-Support for library tasks comes from [`loomlib_lib.rake`][lib/tasks/rakefiles/loomlib_lib.rake].
+Support for library tasks comes from [`loomlib_lib.rake`](lib/tasks/rakefiles/loomlib_lib.rake).
 
 `lib/` contains the library code, which will be packaged into a `.loomlib` file for installation into a Loom SDK. <br>
 
@@ -161,7 +161,7 @@ This provides runtime access to the library version, and is also used in the nam
 
 #### test
 
-Support for test tasks comes from [`loomlib_test.rake`][lib/tasks/rakefiles/loomlib_test.rake].
+Support for test tasks comes from [`loomlib_test.rake`](lib/tasks/rakefiles/loomlib_test.rake).
 Use of [spec-ls][spec-ls] is assumed.
 
 `test/` contains unit tests of the library code. The tests are not packaged with the loomlib; they are run from a separate test runner app. <br>
