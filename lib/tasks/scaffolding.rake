@@ -23,8 +23,9 @@ def template_dir
   File.join(Dir.home, '.loom', 'tasks', 'templates')
 end
 
-def init_template_context(context)
-  # context = Class.new # TODO: test this as binding, instead of passing big bloated rake binding around
+def template_context()
+  context = binding
+
   context.local_variable_set(:lib_name, lib_name)
   context.local_variable_set(:sdk_version, default_loom_sdk)
 
@@ -237,11 +238,13 @@ end
 namespace :new do
 
   task :gitignore do |t, args|
-    create_from_template(gitignore_pathname, gitignore_template, binding)
+    context = template_context
+
+    create_from_template(gitignore_pathname, gitignore_template, context)
   end
 
   task :rakefile do |t, args|
-    context = binding
+    context = template_context
     context.local_variable_set(:lib_name, lib_name)
 
     create_from_template(rakefile_pathname, rakefile_template, context)
@@ -250,7 +253,7 @@ namespace :new do
   task :cli do |t, args|
     name = "#{lib_name}DemoCLI"
 
-    context = init_template_context(binding)
+    context = template_context
 
     create_from_string(loomconfig_pathname('cli'), loomconfig_cli_contents)
     create_from_string(loombuild_pathname('cli', name), loombuild_demo_cli_contents)
@@ -260,7 +263,7 @@ namespace :new do
   task :gui do |t, args|
     name = "#{lib_name}DemoGUI"
 
-    context = init_template_context(binding)
+    context = template_context
     context.local_variable_set(:app_name, name)
 
     create_from_template(loomconfig_pathname('gui'), loomconfig_gui_template, context)
@@ -270,7 +273,7 @@ namespace :new do
   end
 
   task :lib do |t, args|
-    context = init_template_context(binding)
+    context = template_context
 
     create_from_string(loomconfig_pathname('lib'), loomconfig_cli_contents)
     create_from_string(loombuild_pathname('lib', lib_name), loombuild_lib_contents)
@@ -280,7 +283,7 @@ namespace :new do
   task :test do |t, args|
     name = "#{lib_name}Test"
 
-    context = init_template_context(binding)
+    context = template_context
 
     create_from_string(loomconfig_pathname('test'), loomconfig_cli_contents)
     create_from_string(loombuild_pathname('test', name), loombuild_test_contents)
