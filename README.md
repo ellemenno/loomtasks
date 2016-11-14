@@ -3,6 +3,7 @@ loom tasks
 
 Rake tasks for working with loomlibs
 
+[[ TOC ]]
 
 ## overview
 
