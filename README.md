@@ -3,7 +3,11 @@ loom tasks
 
 Rake tasks for working with loomlibs
 
-[[ TOC ]]
+- [overview](#overview)
+- [installation](#installation)
+- [usage](#usage)
+- [conventions](#conventions)
+- [contributing](#contributing)
 
 ## overview
 
