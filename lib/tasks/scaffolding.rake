@@ -73,8 +73,8 @@ end
 
 def demo_gui_assets()
   %w(
-    font.fnt
-    font.png
+    pixeldroidMenuRegular-64.fnt
+    pixeldroidMenuRegular-64.png
   ).map {|f| File.join(template_dir, f)}
 end
 
