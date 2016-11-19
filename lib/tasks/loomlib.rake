@@ -21,6 +21,8 @@ include LoomTasks
 
 @global_loom_config = nil
 
+LIBRARY = File.join('lib', 'build', "#{LoomTasks.const_lib_name}.loomlib")
+
 def default_sdk
   global_config['default_sdk']
 end
@@ -29,9 +31,27 @@ def global_config()
   @global_loom_config || (@global_loom_config = LoomTasks.parse_loom_config(LoomTasks.global_config_file))
 end
 
-LIBRARY = File.join('lib', 'build', "#{LoomTasks.const_lib_name}.loomlib")
+def ensure_lib_uptodate(sdk_version)
+  file_installed = File.join(LoomTasks.libs_path(sdk_version), "#{LoomTasks.const_lib_name}.loomlib")
+  Rake::Task['lib:install'].invoke unless FileUtils.uptodate?(file_installed, [LIBRARY])
+end
 
-Dir.glob(File.join(File.dirname(__FILE__), 'rakefiles', '*.rake')).each { |r| load r }
+def compile_demo(dir, build_file, demo_config)
+  sdk_version = demo_config['sdk_version']
+  ensure_lib_uptodate(sdk_version)
+
+  Dir.chdir(dir) do
+    Dir.mkdir('bin') unless Dir.exists?('bin')
+    cmd = "#{LoomTasks.lsc(sdk_version)} #{build_file}"
+    try(cmd, "failed to compile .loom")
+  end
+end
+
+Dir.glob(File.join(File.dirname(__FILE__), 'rakefiles', '*.rake')).each do |rakefile|
+  # don't load rakefiles for non-existent modules
+  dir = File.basename(rakefile).match(/loomlib_(.*)\.rake/)[1]
+  load rakefile if Dir.exists?(dir)
+end
 
 [File.join('releases', '**')].each { |f| CLEAN << f }
 Rake::Task[:clean].clear_comments()
