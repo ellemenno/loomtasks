@@ -78,10 +78,11 @@ If you are looking for more detail on any of the tasks, use `rake help`.
 
 The Rake tasks are defined with dependencies and modification triggers, so you can just run `rake test` every time you edit a source file, and the library and test app will be rebuilt as needed automatically.
 
-
 ## conventions
 
-The loomlib rake tasks make the following assumptions about the layout of a project:
+The loomlib rake tasks make the following assumptions about the layout of a project.
+
+> If there are portions of the scaffold that you are not interested in using (i.e. `cli`, `gui`), just delete those folders, and the corresponding rake tasks will not be loaded.
 
 ### directory structure
 
