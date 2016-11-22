@@ -101,7 +101,7 @@ The loomlib rake tasks make the following assumptions about the layout of a proj
 
 #### demos
 
-Support for demo tasks comes from [`loomlib_demo.rake`](lib/tasks/rakefiles/loomlib_demo.rake).
+Support for CLI demo tasks comes from [`loomlib_cli.rake`](lib/tasks/rakefiles/loomlib_cli.rake).
 
 `cli/` contains a command line demonstration app. <br>
 
@@ -117,6 +117,8 @@ Support for demo tasks comes from [`loomlib_demo.rake`](lib/tasks/rakefiles/loom
 * the cli demo has its own loom config file at `cli/loom.config`
 * the cli demo has its own loom build file at `cli/src/FooDemoCLI.build`
 * the cli demo source code is under `cli/src/`
+
+Support for GUI demo tasks comes from [`loomlib_gui.rake`](lib/tasks/rakefiles/loomlib_gui.rake).
 
 `gui/` contains a functional graphical demonstration app. <br>
 
