@@ -1,0 +1,21 @@
+package
+{
+    import system.application.ConsoleApplication;
+
+    //import <%= lib_name %> classes here
+
+
+    public class <%= lib_name %>DemoCLI extends ConsoleApplication
+    {
+        override public function run():void
+        {
+            trace(this.getFullTypeName());
+
+            var arg:String;
+            for (var i = 0; i < CommandLine.getArgCount(); i++)
+            {
+                trace('arg', i, ':', CommandLine.getArg(i));
+            }
+        }
+    }
+}

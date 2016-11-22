@@ -1,10 +1,11 @@
 # encoding: utf-8
 
+require 'json'
 require 'rbconfig'
 
 module LoomTasks
 
-  VERSION = '2.0.1'
+  VERSION = '3.0.0'
 
   EXIT_OK = 0
 
@@ -99,7 +100,19 @@ module LoomTasks
   end
 
   def write_loom_config(file, config)
-    File.open(file, 'w') { |f| f.write(JSON.pretty_generate(config)) }
+    File.open(file, 'w') { |f| f.write("#{JSON.pretty_generate(config)}\n") }
+  end
+
+  def const_find(name)
+    Module.const_defined?(name) ? Module.const_get(name) : nil
+  end
+
+  def const_lib_name
+    const_find('LIB_NAME')
+  end
+
+  def const_lib_version_file
+    const_find('LIB_VERSION_FILE')
   end
 
   def lib_version_regex()
@@ -110,20 +123,12 @@ module LoomTasks
     Regexp.new(%r/(^\s*)(public static const version:String = ')(\d+\.\d+\.\d+)(';)/)
   end
 
-  def lib_version()
-    File.open(lib_version_file, 'r') do |f|
+  def lib_version(version_file)
+    File.open(version_file, 'r') do |f|
       matches = f.read.scan(lib_version_regex)
       raise("No version const defined in #{lib_version_file}") if matches.empty?
       matches.first[2]
     end
-  end
-
-  def update_lib_version(new_value)
-    old_value = lib_version # force the check for an existing version
-    IO.write(
-      lib_version_file,
-      File.open(lib_version_file, 'r') { |f| f.read.gsub!(lib_version_regex, '\1\2'+new_value+'\4') }
-    )
   end
 
   def libs_path(sdk_version)
@@ -146,7 +151,7 @@ module LoomTasks
     Regexp.new(%r/(download\/v)(\d+\.\d+\.\d+)(\/.*-)(.*)(.loomlib)/)
   end
 
-  def update_readme_version(new_value, sdk_version)
+  def update_readme_version(readme_file, new_value, sdk_version)
     IO.write(
       readme_file,
       File.open(readme_file, 'r') do |f|
