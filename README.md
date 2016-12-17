@@ -72,7 +72,7 @@ Running `rake` in your project directory will execute the default task, which pr
     rake test:run          # runs test/bin/FooTest.loom for the console
     rake test:sdk[id]      # sets the provided SDK version into test/loom.config
     rake version           # reports loomlib version
-    (using loomtasks v3.0.0)
+    (using loomtasks v3.0.1)
 
 If you are looking for more detail on any of the tasks, use `rake help`.
 
