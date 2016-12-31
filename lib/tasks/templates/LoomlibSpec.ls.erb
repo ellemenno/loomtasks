@@ -5,15 +5,20 @@ package
 
     import <%= lib_name %>;
 
+
     public static class <%= lib_name %>Spec
     {
+        private static const it:Thing = Spec.describe('<%= lib_name %>');
+
         public static function describe():void
         {
-            var it:Thing = Spec.describe('<%= lib_name %>');
+            it.should('have useful tests', have_useful_tests);
+        }
 
-            it.should('have useful tests', function() {
-                it.expects(false).toBeTruthy();
-            });
+
+        private static function have_useful_tests():void
+        {
+            it.expects(false).toBeTruthy();
         }
     }
 }
