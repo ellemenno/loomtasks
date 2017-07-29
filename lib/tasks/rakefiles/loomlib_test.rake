@@ -87,7 +87,7 @@ namespace :test do
     "runs #{TEST} for the console",
     "the test runner will print short-form results to stdout",
   ].join("\n")
-  task :run => TEST do |t, args|
+  task :run, [:seed] => TEST do |t, args|
     sdk_version = test_config['sdk_version']
     binary = t.prerequisites[0]
     main = File.join('test', LoomTasks.main_binary)
@@ -100,6 +100,7 @@ namespace :test do
 
     Dir.chdir('test') do
       cmd = "#{loomexec(sdk_version)} --format ansi"
+      cmd = "#{cmd} --seed #{args.seed}" if args.seed
       try(cmd, "tests failed")
     end
   end
