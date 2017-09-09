@@ -65,8 +65,9 @@ module LoomTasks
     File.join(Dir.home, '.loom', 'loom.config')
   end
 
-  def sdk_root()
-    File.join(Dir.home, '.loom', 'sdks')
+  def sdk_root(sdk_version = nil)
+    root = File.join(Dir.home, '.loom', 'sdks')
+    sdk_version ? File.join(root, sdk_version) : root
   end
 
   def sdk_architecture()
