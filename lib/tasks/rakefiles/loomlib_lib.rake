@@ -35,6 +35,10 @@ def lib_build_config()
   @lib_build_config || (@lib_build_config = LoomTasks.parse_loom_config(lib_build_file))
 end
 
+def release_dir()
+  'releases'
+end
+
 def readme_file()
   'README.md'
 end
@@ -108,7 +112,6 @@ namespace :lib do
   task :release => LIBRARY do |t, args|
     sdk = lib_config['sdk_version']
     ext = '.loomlib'
-    release_dir = 'releases'
     lib = t.prerequisites[0]
     lib_version = LoomTasks.lib_version(lib_version_file)
 
