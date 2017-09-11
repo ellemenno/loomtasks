@@ -6,6 +6,7 @@ include LoomTasks
 
 
 @lib_loom_config = nil
+@lib_build_config = nil
 
 def lib_build_file()
   File.join('lib', 'src', "#{lib_name}.build")
