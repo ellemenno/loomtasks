@@ -134,6 +134,7 @@ namespace :lib do
   desc [
     "sets the provided SDK version into #{lib_config_file}",
     "this updates #{lib_config_file} to define which SDK will compile the loomlib and be the install target",
+    "available sdks can be listed with 'rake list_sdks'",
   ].join("\n")
   task :sdk, [:id] => 'lib:uninstall' do |t, args|
     args.with_defaults(:id => default_sdk)
