@@ -8,10 +8,12 @@ package
 
     public static class <%= lib_name %>Spec
     {
-        private static const it:Thing = Spec.describe('<%= lib_name %>');
+        private static var it:Thing;
 
-        public static function describe():void
+        public static function specify(specifier:Spec):void
         {
+            it = specifier.describe('<%= lib_name %>');
+
             it.should('have useful tests', have_useful_tests);
         }
 

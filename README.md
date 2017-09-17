@@ -15,11 +15,11 @@ Rake tasks for working with loomlibs
 
 loomlibs are linkable LoomScript code libraries used to expand features of the [Loom SDK][loomsdk].
 
-If you use [Rake][rake] and follow a consistent file layout across projects, these tasks can simplify the steps of seting up, building, installing, testing, demo-ing, and releasing loom libraries (`*.loomlib`).
+If you use [Rake][rake] and follow a consistent file layout across projects, these tasks can simplify the steps of setting up, building, installing, testing, demo-ing, and releasing loom libraries (`*.loomlib`).
 
 The tasks install into your `.loom` directory, and can be loaded from there into the Rakefiles of your projects.
 
-loom tasks do not replace or interfere with the [loomcli][loomcli]; the two can be used safely together.
+See [more details](#more-details) for the list of tasks provided.
 
 
 ## installation
@@ -65,14 +65,15 @@ Running `rake` in your project directory will execute the default task, which pr
     rake lib:show          # lists libs installed for sprint34 SDK
     rake lib:uninstall     # removes Foo.loomlib from sprint34 SDK
     rake lib:version[v]    # sets the library version number into lib/src/Foo.build and lib/src/Foo.ls
+    rake list_sdks         # lists loom sdk versions available use
     rake sdk[id]           # sets the provided SDK version in the config files of lib, cli, gui, and test
     rake test              # shorthand for rake test:run
     rake test:build        # builds test/bin/FooTest.loom against sprint34 SDK
     rake test:ci           # runs test/bin/FooTest.loom for CI
-    rake test:run          # runs test/bin/FooTest.loom for the console
+    rake test:run[seed]    # runs test/bin/FooTest.loom for the console
     rake test:sdk[id]      # sets the provided SDK version into test/loom.config
     rake version           # reports loomlib version
-    (using loomtasks v3.0.2)
+    (using loomtasks v3.0.3)
 
 If you are looking for more detail on any of the tasks, use `rake help`.
 
@@ -200,7 +201,6 @@ Pull requests are welcome!
 
 
 [gh-releases]: https://help.github.com/articles/about-releases/ "about GitHub releases"
-[loomcli]: https://loomsdk.com/#see "See the Loom CLI demo"
 [loomsdk]: https://github.com/LoomSDK/LoomSDK "The Loom SDK, a native mobile app and game framework"
 [rake]: https://rubygems.org/gems/rake "Rake (Ruby make)"
 [spec-ls]: https://github.com/pixeldroid/spec-ls "spec-ls: a simple specification framework for loom"

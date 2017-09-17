@@ -6,6 +6,7 @@ include LoomTasks
 
 
 @lib_loom_config = nil
+@lib_build_config = nil
 
 def lib_build_file()
   File.join('lib', 'src', "#{lib_name}.build")
@@ -33,6 +34,10 @@ end
 
 def lib_build_config()
   @lib_build_config || (@lib_build_config = LoomTasks.parse_loom_config(lib_build_file))
+end
+
+def release_dir()
+  'releases'
 end
 
 def readme_file()
@@ -108,7 +113,6 @@ namespace :lib do
   task :release => LIBRARY do |t, args|
     sdk = lib_config['sdk_version']
     ext = '.loomlib'
-    release_dir = 'releases'
     lib = t.prerequisites[0]
     lib_version = LoomTasks.lib_version(lib_version_file)
 
@@ -130,6 +134,7 @@ namespace :lib do
   desc [
     "sets the provided SDK version into #{lib_config_file}",
     "this updates #{lib_config_file} to define which SDK will compile the loomlib and be the install target",
+    "available sdks can be listed with 'rake list_sdks'",
   ].join("\n")
   task :sdk, [:id] => 'lib:uninstall' do |t, args|
     args.with_defaults(:id => default_sdk)

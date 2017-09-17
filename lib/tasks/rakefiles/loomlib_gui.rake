@@ -80,6 +80,7 @@ namespace :gui do
   desc [
     "sets the provided SDK version into #{gui_config_file}",
     "this updates #{gui_config_file} to define which SDK will compile the test apps",
+    "available sdks can be listed with 'rake list_sdks'",
   ].join("\n")
   task :sdk, [:id] do |t, args|
     args.with_defaults(:id => default_sdk)

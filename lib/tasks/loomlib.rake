@@ -75,7 +75,7 @@ task :list_targets => :check_consts do |t, args|
   a = "#{LoomTasks.const_lib_name} v#{LoomTasks.lib_version(const_lib_version_file)} Rakefile"
   b = "running on Ruby #{RUBY_VERSION}"
   puts "#{a} #{b}"
-  system("rake -T")
+  system('rake -T')
   puts "(using loomtasks v#{LoomTasks::VERSION})"
 end
 
@@ -89,7 +89,7 @@ desc [
   "show detailed usage and project info",
 ].join("\n")
 task :help do |t, args|
-  system("rake -D")
+  system('rake -D')
 
   puts "Please see the README for additional details."
 end
@@ -97,6 +97,7 @@ end
 desc [
   "sets the provided SDK version in the config files of lib, cli, gui, and test",
   "each config file can also be set independently, using the namespaced tasks provided",
+  "available sdks can be listed with 'rake list_sdks'",
 ].join("\n")
 task :sdk, [:id] do |t, args|
   args.with_defaults(:id => default_sdk)
@@ -111,4 +112,14 @@ task :sdk, [:id] do |t, args|
   Rake::Task['test:sdk'].invoke(sdk_version)
 
   puts "[#{t.name}] task completed, all loom.configs updated to #{sdk_version}"
+end
+
+desc [
+  "lists loom sdk versions available use",
+  "loom sdks are stored in #{LoomTasks.sdk_root}",
+].join("\n")
+task :list_sdks do |t, args|
+  cmd = "ls -l1 #{LoomTasks.sdk_root}" unless windows?
+  cmd = "dir /b #{LoomTasks.sdk_root}" if windows?
+  system(cmd)
 end

@@ -69,7 +69,7 @@ namespace :cli do
     FileUtils.cp(binary, main)
 
     Dir.chdir('cli') do
-      cmd = "#{LoomTasks.loomexec(sdk_version)} #{args.options}"
+      cmd = LoomTasks.loomexec(sdk_version, args.options)
       try(cmd, "failed to exec .loom")
     end
   end
@@ -77,6 +77,7 @@ namespace :cli do
   desc [
     "sets the provided SDK version into #{cli_config_file}",
     "this updates #{cli_config_file} to define which SDK will compile the test apps",
+    "available sdks can be listed with 'rake list_sdks'",
   ].join("\n")
   task :sdk, [:id] do |t, args|
     args.with_defaults(:id => default_sdk)
