@@ -32,12 +32,14 @@ module LoomTasks
     File.join(bin_dir, 'Main.loom')
   end
 
-  def loomexec(sdk_version)
+  def loomexec(sdk_version, args = nil)
     # needs to be run in the project root
     # stubbornly, the runner loads bin/Main.loom from the current working directory
     # weirdly, the runner expects a throw-away arg, so we pass an ignorable something
     ignorable = '//'
-    "#{File.join(sdk_tools(sdk_version), 'loomexec')} #{ignorable}"
+    executable = File.join(sdk_tools(sdk_version), 'loomexec')
+
+    args ? "#{executable} #{ignorable} #{args}" : executable
   end
 
   def loomlaunch(sdk_version)

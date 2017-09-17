@@ -69,7 +69,7 @@ namespace :cli do
     FileUtils.cp(binary, main)
 
     Dir.chdir('cli') do
-      cmd = "#{LoomTasks.loomexec(sdk_version)} #{args.options}"
+      cmd = LoomTasks.loomexec(sdk_version, args.options)
       try(cmd, "failed to exec .loom")
     end
   end

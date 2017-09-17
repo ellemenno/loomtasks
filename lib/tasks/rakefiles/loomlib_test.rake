@@ -78,7 +78,8 @@ namespace :test do
     FileUtils.cp(binary, main)
 
     Dir.chdir('test') do
-      cmd = "#{loomexec(sdk_version)} --format junit --format console"
+      opts = '--format junit --format console'
+      cmd = LoomTasks.loomexec(sdk_version, opts)
       try(cmd, "tests failed")
     end
   end
@@ -99,7 +100,8 @@ namespace :test do
     FileUtils.cp(binary, main)
 
     Dir.chdir('test') do
-      cmd = "#{loomexec(sdk_version)} --format ansi"
+      opts = '--format ansi'
+      cmd = LoomTasks.loomexec(sdk_version, opts)
       cmd = "#{cmd} --seed #{args.seed}" if args.seed
       try(cmd, "tests failed")
     end
