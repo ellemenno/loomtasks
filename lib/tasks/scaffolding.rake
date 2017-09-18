@@ -55,6 +55,16 @@ def gitignore_template()
   File.join(template_dir, 'gitignore.erb')
 end
 
+def cli_wrapper_pathname()
+  ext = windows? ? 'bat' : 'sh'
+  File.join(Dir.pwd, 'cli', 'wrapper', "#{lib_name}.#{ext}")
+end
+
+def cli_wrapper_template()
+  ext = windows? ? 'bat' : 'sh'
+  File.join(template_dir, "cli_wrapper.#{ext}")
+end
+
 def demo_cli_pathname()
   File.join(Dir.pwd, 'cli', 'src', "#{lib_name}DemoCLI.ls")
 end
@@ -258,6 +268,7 @@ namespace :new do
     create_from_string(loomconfig_pathname('cli'), loomconfig_cli_contents)
     create_from_string(loombuild_pathname('cli', name), loombuild_demo_cli_contents)
     create_from_template(demo_cli_pathname, demo_cli_template, context)
+    create_from_template(cli_wrapper_pathname, cli_wrapper_template, context)
   end
 
   task :gui do |t, args|
@@ -296,7 +307,7 @@ namespace :new do
   desc [
     "scaffolds the directories and files for a new loomlib project",
     "if no name argument is given, the current directory name is used",
-    "creates a .gitignore file, rakefile, and template library and test code",
+    "creates a .gitignore file, rakefile, template library and test code",
     "this task assumes (but does not enforce) being run in an empty directory",
   ].join("\n")
   task :loomlib, [:name] do |t, args|
