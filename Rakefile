@@ -59,11 +59,10 @@ task :help do |t, args|
 end
 
 desc [
-  "reports loomtasks version",
+  "reports loomtasks version (v#{VERSION})",
 ].join("\n")
 task :version do |t, args|
   puts "loomtasks v#{VERSION}"
-  puts ''
 end
 
 namespace :list do
@@ -105,7 +104,7 @@ end
 desc [
   "removes the tasks folder from the Loom home directory",
   "the task folder is #{installed_tasks_dir}",
-  "the entire tasks folder will be removed, so use with caution if you happened to put anything in there",
+  "the entire tasks folder will be removed, so use with caution if you added anything in there",
 ].join("\n")
 task :uninstall do |t, args|
   FileUtils.rm_r(installed_tasks_dir) if Dir.exists?(installed_tasks_dir)
