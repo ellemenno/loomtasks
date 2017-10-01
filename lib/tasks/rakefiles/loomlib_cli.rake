@@ -47,7 +47,11 @@ file DEMO_CLI => LIBRARY do |t, args|
   compile_demo('cli', "#{LoomTasks.const_lib_name}DemoCLI.build", cli_config)
 end
 
-FileList[File.join('cli', 'src', '**', '*.ls')].each do |src|
+FileList[
+  File.join('cli', 'loom.config'),
+  File.join('cli', 'src', '*.build'),
+  File.join('cli', 'src', '**', '*.ls'),
+].each do |src|
   file DEMO_CLI => src
 end
 

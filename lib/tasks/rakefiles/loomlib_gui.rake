@@ -33,7 +33,11 @@ file DEMO_GUI => LIBRARY do |t, args|
   compile_demo('gui', "#{LoomTasks.const_lib_name}DemoGUI.build", gui_config)
 end
 
-FileList[File.join('gui', 'src', '**', '*.ls')].each do |src|
+FileList[
+  File.join('gui', 'loom.config'),
+  File.join('gui', 'src', '*.build'),
+  File.join('gui', 'src', '**', '*.ls'),
+].each do |src|
   file DEMO_GUI => src
 end
 

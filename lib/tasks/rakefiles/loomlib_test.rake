@@ -44,7 +44,11 @@ file TEST => LIBRARY do |t, args|
   end
 end
 
-FileList[File.join('test', 'src', '**', '*.ls')].each do |src|
+FileList[
+  File.join('test', 'loom.config'),
+  File.join('test', 'src', '*.build'),
+  File.join('test', 'src', '**', '*.ls'),
+].each do |src|
   file TEST => src
 end
 
