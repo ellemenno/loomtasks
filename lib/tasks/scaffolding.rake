@@ -16,7 +16,7 @@ def default_loom_sdk
 end
 
 def lib_name()
-  @lib_name || fail("no lib name defined")
+  @lib_name || LoomTasks.fail("no lib name defined")
 end
 
 def template_dir

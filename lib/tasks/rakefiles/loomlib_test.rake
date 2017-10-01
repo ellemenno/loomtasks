@@ -117,7 +117,7 @@ namespace :test do
     sdk_version = args.id
     lib_dir = LoomTasks.libs_path(sdk_version)
 
-    fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
+    LoomTasks.fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 
     test_config['sdk_version'] = sdk_version
     write_test_config(test_config)

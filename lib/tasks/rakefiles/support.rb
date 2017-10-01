@@ -21,7 +21,7 @@ module LoomTasks
   end
 
   def try(cmd, failure_message)
-    fail(failure_message) if (exec_with_echo(cmd) != EXIT_OK)
+    LoomTasks.fail(failure_message) if (exec_with_echo(cmd) != EXIT_OK)
   end
 
   def bin_dir()

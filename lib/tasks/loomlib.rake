@@ -80,8 +80,8 @@ task :list_targets => :check_consts do |t, args|
 end
 
 task :check_consts do |t, args|
-  fail("please define the LIB_NAME constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_name
-  fail("please define the LIB_VERSION_FILE constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_version_file
+  LoomTasks.fail("please define the LIB_NAME constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_name
+  LoomTasks.fail("please define the LIB_VERSION_FILE constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_version_file
 end
 
 
@@ -104,7 +104,7 @@ task :sdk, [:id] do |t, args|
   sdk_version = args.id
   lib_dir = LoomTasks.libs_path(sdk_version)
 
-  fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
+  LoomTasks.fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 
   Rake::Task['lib:sdk'].invoke(sdk_version)
   Rake::Task['cli:sdk'].invoke(sdk_version)
