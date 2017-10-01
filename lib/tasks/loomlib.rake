@@ -86,10 +86,20 @@ end
 
 
 desc [
-  "show detailed usage and project info",
+  "shows usage and project info, optionally for a specific command",
+  "usage: rake help",
+  "   or: rake help <command>",
 ].join("\n")
 task :help do |t, args|
-  system('rake -D')
+  # avoid rake errors about undefined tasks; we want to pull args ourselves
+  ARGV.each do |a|
+    task a.to_sym do ; end
+    Rake::Task[a.to_sym].clear
+  end
+
+  cmd = ARGV.fetch(1, nil)
+  system("rake -D #{cmd}") if (cmd)
+  system("rake -D") unless (cmd)
 
   puts "Please see the README for additional details."
 end

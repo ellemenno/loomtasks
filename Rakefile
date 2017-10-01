@@ -47,15 +47,29 @@ task :install do |t, args|
 end
 
 desc [
-  "shows usage and project info",
+  "shows usage and project info, optionally for a specific command",
+  "usage: rake help",
+  "   or: rake help <command>",
 ].join("\n")
 task :help do |t, args|
-  system("rake -D")
+  # avoid rake errors about undefined tasks; we want to pull args ourselves
+  ARGV.each do |a|
+    task a.to_sym do ; end
+    Rake::Task[a.to_sym].clear
+  end
 
-  puts "Log bugs to: https://github.com/pixeldroid/loomtasks/issues"
-  puts "Project home page: https://github.com/pixeldroid/loomtasks"
-  puts ''
-  puts "Please see the README for additional details."
+  cmd = ARGV.fetch(1, nil)
+
+  if (cmd)
+    system("rake -D #{cmd}")
+  else
+    system("rake -D")
+
+    puts "Log bugs to: https://github.com/pixeldroid/loomtasks/issues"
+    puts "Project home page: https://github.com/pixeldroid/loomtasks"
+    puts ''
+    puts "Please see the README for additional details."
+  end
 end
 
 desc [
