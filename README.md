@@ -121,7 +121,7 @@ Use of [lsdoc][lsdoc] is assumed.
       └─lsdoc.config
 
 * (optional) example pages are written under `doc/examples/`; they will have their own tab in the generated docs site
-* (optional) guide pages are written under `doc/examples/`; they will have their own tab in the generated docs site
+* (optional) guide pages are written under `doc/guides/`; they will have their own tab in the generated docs site
 * project level configuration for lsdoc is defined in `doc/lsdoc.config`
 * the documentation home page is written in markdown as `doc/index.md`
 * [lsdoc][lsdoc] will use the data under `doc/` to create a site under `docs/` that GitHub Pages will render after it is pushed to your GitHub repository
