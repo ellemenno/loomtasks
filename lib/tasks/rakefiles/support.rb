@@ -5,7 +5,7 @@ require 'rbconfig'
 
 module LoomTasks
 
-  VERSION = '3.0.3'
+  VERSION = '3.1.0'
 
   EXIT_OK = 0
 
@@ -21,7 +21,21 @@ module LoomTasks
   end
 
   def try(cmd, failure_message)
-    fail(failure_message) if (exec_with_echo(cmd) != EXIT_OK)
+    LoomTasks.fail(failure_message) if (exec_with_echo(cmd) != EXIT_OK)
+  end
+
+  def which(cmd)
+    # from https://stackoverflow.com/a/5471032
+    exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+
+    ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+      exts.each do |ext|
+        exe = File.join(path, "#{cmd}#{ext}")
+        return exe if File.executable?(exe) && !File.directory?(exe)
+      end
+    end
+
+    return nil
   end
 
   def bin_dir()

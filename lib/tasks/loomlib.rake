@@ -80,16 +80,26 @@ task :list_targets => :check_consts do |t, args|
 end
 
 task :check_consts do |t, args|
-  fail("please define the LIB_NAME constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_name
-  fail("please define the LIB_VERSION_FILE constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_version_file
+  LoomTasks.fail("please define the LIB_NAME constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_name
+  LoomTasks.fail("please define the LIB_VERSION_FILE constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_version_file
 end
 
 
 desc [
-  "show detailed usage and project info",
+  "shows usage and project info, optionally for a specific command",
+  "usage: rake help",
+  "   or: rake help <command>",
 ].join("\n")
 task :help do |t, args|
-  system('rake -D')
+  # avoid rake errors about undefined tasks; we want to pull args ourselves
+  ARGV.each do |a|
+    task a.to_sym do ; end
+    Rake::Task[a.to_sym].clear
+  end
+
+  cmd = ARGV.fetch(1, nil)
+  system("rake -D #{cmd}") if (cmd)
+  system("rake -D") unless (cmd)
 
   puts "Please see the README for additional details."
 end
@@ -104,7 +114,7 @@ task :sdk, [:id] do |t, args|
   sdk_version = args.id
   lib_dir = LoomTasks.libs_path(sdk_version)
 
-  fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
+  LoomTasks.fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 
   Rake::Task['lib:sdk'].invoke(sdk_version)
   Rake::Task['cli:sdk'].invoke(sdk_version)

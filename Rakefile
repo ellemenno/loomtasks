@@ -47,23 +47,36 @@ task :install do |t, args|
 end
 
 desc [
-  "shows usage and project info",
+  "shows usage and project info, optionally for a specific command",
+  "usage: rake help",
+  "   or: rake help <command>",
 ].join("\n")
 task :help do |t, args|
-  system("rake -D")
+  # avoid rake errors about undefined tasks; we want to pull args ourselves
+  ARGV.each do |a|
+    task a.to_sym do ; end
+    Rake::Task[a.to_sym].clear
+  end
 
-  puts "Log bugs to: https://github.com/pixeldroid/loomtasks/issues"
-  puts "Project home page: https://github.com/pixeldroid/loomtasks"
-  puts ''
-  puts "Please see the README for additional details."
+  cmd = ARGV.fetch(1, nil)
+
+  if (cmd)
+    system("rake -D #{cmd}")
+  else
+    system("rake -D")
+
+    puts "Log bugs to: https://github.com/pixeldroid/loomtasks/issues"
+    puts "Project home page: https://github.com/pixeldroid/loomtasks"
+    puts ''
+    puts "Please see the README for additional details."
+  end
 end
 
 desc [
-  "reports loomtasks version",
+  "reports loomtasks version (v#{VERSION})",
 ].join("\n")
 task :version do |t, args|
   puts "loomtasks v#{VERSION}"
-  puts ''
 end
 
 namespace :list do
@@ -105,7 +118,7 @@ end
 desc [
   "removes the tasks folder from the Loom home directory",
   "the task folder is #{installed_tasks_dir}",
-  "the entire tasks folder will be removed, so use with caution if you happened to put anything in there",
+  "the entire tasks folder will be removed, so use with caution if you added anything in there",
 ].join("\n")
 task :uninstall do |t, args|
   FileUtils.rm_r(installed_tasks_dir) if Dir.exists?(installed_tasks_dir)

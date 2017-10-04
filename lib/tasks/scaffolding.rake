@@ -16,7 +16,7 @@ def default_loom_sdk
 end
 
 def lib_name()
-  @lib_name || fail("no lib name defined")
+  @lib_name || LoomTasks.fail("no lib name defined")
 end
 
 def template_dir
@@ -55,6 +55,16 @@ def gitignore_template()
   File.join(template_dir, 'gitignore.erb')
 end
 
+def cli_wrapper_pathname()
+  ext = windows? ? 'bat' : 'sh'
+  File.join(Dir.pwd, 'cli', 'wrapper', "#{lib_name}.#{ext}")
+end
+
+def cli_wrapper_template()
+  ext = windows? ? 'bat' : 'sh'
+  File.join(template_dir, "cli_wrapper.#{ext}")
+end
+
 def demo_cli_pathname()
   File.join(Dir.pwd, 'cli', 'src', "#{lib_name}DemoCLI.ls")
 end
@@ -80,6 +90,22 @@ end
 
 def demo_gui_template()
   File.join(template_dir, 'LoomlibDemoGUI.ls.erb')
+end
+
+def doc_config_pathname()
+  File.join(Dir.pwd, 'doc', 'lsdoc.config')
+end
+
+def doc_config_template()
+  File.join(template_dir, 'lsdoc.config.erb')
+end
+
+def doc_index_pathname()
+  File.join(Dir.pwd, 'doc', 'index.md')
+end
+
+def doc_index_template()
+  File.join(template_dir, 'index.md.erb')
 end
 
 def lib_testapp_pathname()
@@ -258,6 +284,14 @@ namespace :new do
     create_from_string(loomconfig_pathname('cli'), loomconfig_cli_contents)
     create_from_string(loombuild_pathname('cli', name), loombuild_demo_cli_contents)
     create_from_template(demo_cli_pathname, demo_cli_template, context)
+    create_from_template(cli_wrapper_pathname, cli_wrapper_template, context)
+  end
+
+  task :doc do |t, args|
+    context = template_context
+
+    create_from_template(doc_config_pathname, doc_config_template, context)
+    create_from_template(doc_index_pathname, doc_index_template, context)
   end
 
   task :gui do |t, args|
@@ -291,12 +325,12 @@ namespace :new do
     create_from_template(lib_testspec_pathname, lib_testspec_template, context)
   end
 
-  task :scaffold => [:gitignore, :rakefile, :lib, :test, :cli, :gui]
+  task :scaffold => [:gitignore, :rakefile, :lib, :test, :cli, :gui, :doc]
 
   desc [
     "scaffolds the directories and files for a new loomlib project",
     "if no name argument is given, the current directory name is used",
-    "creates a .gitignore file, rakefile, and template library and test code",
+    "creates a .gitignore file, rakefile, template library, test code, and docs",
     "this task assumes (but does not enforce) being run in an empty directory",
   ].join("\n")
   task :loomlib, [:name] do |t, args|

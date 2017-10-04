@@ -81,7 +81,11 @@ file LIBRARY do |t, args|
   end
 end
 
-FileList[File.join('lib', 'src', '**', '*.ls')].each do |src|
+FileList[
+  File.join('lib', 'loom.config'),
+  File.join('lib', 'src', '*.build'),
+  File.join('lib', 'src', '**', '*.ls'),
+].each do |src|
   file LIBRARY => src
 end
 
@@ -141,7 +145,7 @@ namespace :lib do
     sdk_version = args.id
     lib_dir = LoomTasks.libs_path(sdk_version)
 
-    fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
+    LoomTasks.fail("no sdk named '#{sdk_version}' found in #{sdk_root}") unless (Dir.exists?(lib_dir))
 
     lib_config['sdk_version'] = sdk_version
     write_lib_config(lib_config)
