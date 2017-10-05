@@ -114,7 +114,7 @@ namespace :cli do
     FileUtils.cp(cli_wrapper, target_wrapper)
     FileUtils.chmod('u=wrx,go=rx', target_wrapper) # 755 on wrapper script to be executable for all, editable by user
 
-    puts "[#{t.name}] task completed, #{LoomTasks.const_lib_name} installed for use"
+    puts "[#{t.name}] task completed, #{LoomTasks.const_lib_name} installed for use as '#{cli_bin_name}'"
   end
 
   desc [
