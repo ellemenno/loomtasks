@@ -48,16 +48,16 @@ Running `rake` in your project directory will execute the default task, which pr
 
     Foo v1.2.3 Rakefile running on Ruby 2.3.0
     rake clean               # removes intermediate files to ensure a clean build
-    rake cli[options]        # shorthand for rake cli:run
+    rake cli[options]        # shorthand for 'rake cli:run'
     rake cli:build           # builds cli/bin/FooDemoCLI.loom for sprint34 SDK
     rake cli:install[b,p]    # installs an executable copy of cli/bin/FooDemoCLI.loom on the system
     rake cli:run[options]    # executes cli/bin/FooDemoCLI.loom as a commandline app, with options, if provided
     rake cli:sdk[id]         # sets the provided SDK version into cli/loom.config
-    rake cli:uninstall[b,p]  # uninstalls the path executable Foo
+    rake cli:uninstall[b,p]  # uninstalls the system executable 'foo'
     rake clobber             # removes all generated artifacts to restore project to checkout-like state
-    rake docs                # shorthand for rake docs:ghpages
+    rake docs                # shorthand for 'rake docs:ghpages'
     rake docs:ghpages        # creates docs ready for rendering by github pages, or jekyll
-    rake gui                 # shorthand for rake gui:run
+    rake gui                 # shorthand for 'rake gui:run'
     rake gui:build           # builds gui/bin/FooDemoGUI.loom for sprint34 SDK
     rake gui:run             # launches gui/bin/FooDemoGUI.loom as a GUI app
     rake gui:sdk[id]         # sets the provided SDK version into gui/loom.config
@@ -71,13 +71,13 @@ Running `rake` in your project directory will execute the default task, which pr
     rake lib:version[v]      # sets the library version number into lib/src/Foo.build and lib/src/Foo.ls
     rake list_sdks           # lists loom sdk versions available use
     rake sdk[id]             # sets the provided SDK version in the config files of lib, cli, gui, and test
-    rake test                # shorthand for rake test:run
+    rake test                # shorthand for 'rake test:run'
     rake test:build          # builds test/bin/FooTest.loom against sprint34 SDK
     rake test:ci             # runs test/bin/FooTest.loom for CI
     rake test:run[seed]      # runs test/bin/FooTest.loom for the console
     rake test:sdk[id]        # sets the provided SDK version into test/loom.config
     rake version             # reports loomlib version
-    (using loomtasks v3.1.0)
+    (using loomtasks v3.1.1)
 
 If you are looking for more detail on any of the tasks, use `rake help`, e.g. `rake help test`.
 
