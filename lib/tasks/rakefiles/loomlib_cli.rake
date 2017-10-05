@@ -19,6 +19,10 @@ def write_cli_config(config)
   LoomTasks.write_loom_config(cli_config_file, config)
 end
 
+def cli_bin_name()
+  LoomTasks.const_lib_name.downcase
+end
+
 def cli_wrapper()
   ext = windows? ? 'bat' : 'sh'
   File.join('cli', 'wrapper', "#{LoomTasks.const_lib_name}.#{ext}")
@@ -87,8 +91,8 @@ namespace :cli do
     cli_path_dir = args.p
     target_bin = File.join(cli_bin_dir, LoomTasks.main_binary)
     target_bin_dir = File.dirname(target_bin)
-    target_exe = File.join(cli_bin_dir, LoomTasks.const_lib_name)
-    target_wrapper = File.join(cli_path_dir, LoomTasks.const_lib_name)
+    target_exe = File.join(cli_bin_dir, cli_bin_name)
+    target_wrapper = File.join(cli_path_dir, cli_bin_name)
 
     if (Dir.exists?(cli_bin_dir))
       puts "[#{t.name}] removing existing #{cli_bin_dir}..."
@@ -156,8 +160,8 @@ namespace :cli do
   end
 
   desc [
-    "uninstalls the path executable #{LoomTasks.const_lib_name}",
-    "the executable directory '#{cli_default_bin_dir}' is removed; override with :bin_dir",
+    "uninstalls the system executable '#{cli_bin_name}'",
+    "the executable directory #{cli_default_bin_dir} is removed; override with :b",
     "the wrapper shell script is removed from #{cli_default_path_dir}; override with :p",
   ].join("\n")
   task :uninstall, [:b, :p] do |t, args|
@@ -178,12 +182,12 @@ namespace :cli do
       puts "[#{t.name}] nothing to do; no #{cli_bin_dir} found"
     end
 
-    installed_wrapper = File.join(cli_path_dir, LoomTasks.const_lib_name)
+    installed_wrapper = File.join(cli_path_dir, cli_bin_name)
     if (File.exists?(installed_wrapper))
       FileUtils.rm_r(installed_wrapper)
-      puts "[#{t.name}] task completed, #{LoomTasks.const_lib_name} removed from #{cli_path_dir}"
+      puts "[#{t.name}] task completed, #{cli_bin_name} removed from #{cli_path_dir}"
     else
-      puts "[#{t.name}] nothing to do; no #{LoomTasks.const_lib_name} found in #{cli_path_dir}"
+      puts "[#{t.name}] nothing to do; no #{cli_bin_name} found in #{cli_path_dir}"
     end
   end
 
