@@ -102,6 +102,6 @@ namespace :gui do
 end
 
 desc [
-  "shorthand for rake gui:run",
+  "shorthand for 'rake gui:run'",
 ].join("\n")
 task :gui => 'gui:run'

@@ -79,6 +79,6 @@ end
 end
 
 desc [
-  "shorthand for rake docs:ghpages",
+  "shorthand for 'rake docs:ghpages'",
 ].join("\n")
 task :docs => 'docs:ghpages'

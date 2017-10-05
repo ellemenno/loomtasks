@@ -194,7 +194,7 @@ namespace :cli do
 end
 
 desc [
-  "shorthand for rake cli:run",
+  "shorthand for 'rake cli:run'",
 ].join("\n")
 task :cli, [:options] do |t, args|
   Rake::Task['cli:run'].invoke(*args)
