@@ -24,6 +24,8 @@ See [more details](#more-details) for the list of tasks provided.
 
 ## installation
 
+> requires [Rake][rake]
+
 Clone this repo.
 
 0. Run `rake install` to:
@@ -230,5 +232,5 @@ Pull requests are welcome!
 [gh-releases]: https://help.github.com/articles/about-releases/ "releases are GitHub's way of packaging and providing software to your users"
 [loomsdk]: https://github.com/LoomSDK/LoomSDK "The Loom SDK, a native mobile app and game framework"
 [lsdoc]: https://github.com/pixeldroid/lsdoc "generate API documentation from doc comments in LoomScript source code"
-[rake]: https://rubygems.org/gems/rake "Rake (Ruby make)"
+[rake]: https://github.com/ruby/rake "A make-like build utility for Ruby"
 [spec-ls]: https://github.com/pixeldroid/spec-ls "a simple specification framework for loom"
