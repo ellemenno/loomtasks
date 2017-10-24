@@ -114,7 +114,7 @@ namespace :lib do
     "the version value will be read from #{LIB_VERSION_FILE}",
     "it must match this regex: #{lib_version_regex}",
   ].join("\n")
-  task :release => LIBRARY do |t, args|
+  task :release => [LIBRARY, 'docs'] do |t, args|
     sdk = lib_config['sdk_version']
     ext = '.loomlib'
     lib = t.prerequisites[0]
