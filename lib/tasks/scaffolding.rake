@@ -247,7 +247,7 @@ def sourcefile_template()
 end
 
 
-task :default => :usage
+task :default => [:usage]
 
 task :usage do |t, args|
   this_file = File.basename(__FILE__)

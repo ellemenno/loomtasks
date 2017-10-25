@@ -46,7 +46,7 @@ DEMO_CLI = File.join('cli', 'bin', "#{LoomTasks.const_lib_name}DemoCLI.loom")
   File.join('cli', 'bin'),
 ].each { |f| CLOBBER << f }
 
-file DEMO_CLI => LIBRARY do |t, args|
+file DEMO_CLI => [LIBRARY] do |t, args|
   puts "[file] creating #{t.name}..."
   compile_demo('cli', "#{LoomTasks.const_lib_name}DemoCLI.build", cli_config)
 end
@@ -56,7 +56,7 @@ FileList[
   File.join('cli', 'src', '*.build'),
   File.join('cli', 'src', '**', '*.ls'),
 ].each do |src|
-  file DEMO_CLI => src
+  file DEMO_CLI => [src]
 end
 
 namespace :cli do
@@ -68,7 +68,7 @@ namespace :cli do
     "the .loom binary is created in cli/bin",
     "you can remove this task from the list with Rake::Task['cli:build'].clear",
   ].join("\n")
-  task :build => DEMO_CLI do |t, args|
+  task :build => [DEMO_CLI] do |t, args|
     puts "[#{t.name}] task completed, find .loom in cli/bin/"
   end
 
@@ -77,7 +77,7 @@ namespace :cli do
     "the binary is renamed 'Main.loom' and stored under #{cli_default_bin_dir}; override with :b",
     "a wrapper script is installed on the path at #{cli_default_path_dir}; override with :p",
   ].join("\n")
-  task :install, [:b, :p] => DEMO_CLI do |t, args|
+  task :install, [:b, :p] => [DEMO_CLI] do |t, args|
     args.with_defaults(
       :b => cli_default_bin_dir,
       :p => cli_default_path_dir,
@@ -122,7 +122,7 @@ namespace :cli do
     "your demo application class should extend system.application.ConsoleApplication",
     "you can remove this task from the list with Rake::Task['cli:run'].clear",
   ].join("\n")
-  task :run, [:options] => DEMO_CLI do |t, args|
+  task :run, [:options] => [DEMO_CLI] do |t, args|
     args.with_defaults(:options => '')
 
     sdk_version = cli_config['sdk_version']

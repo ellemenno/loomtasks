@@ -64,7 +64,7 @@ JEKYLL_CMD = 'jekyll serve -s docs/ -d docs-site -I'
 FileList[
   File.join('doc', '*.*'),
 ].each do |src|
-  file LIB_DOC => src
+  file LIB_DOC => [src]
 end
 
 namespace :docs do
@@ -113,4 +113,4 @@ end
 desc [
   "shorthand for 'rake docs:ghpages'",
 ].join("\n")
-task :docs => 'docs:ghpages'
+task :docs => ['docs:ghpages']
