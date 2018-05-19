@@ -86,7 +86,7 @@ FileList[
   File.join('lib', 'src', '*.build'),
   File.join('lib', 'src', '**', '*.ls'),
 ].each do |src|
-  file LIBRARY => src
+  file LIBRARY => [src]
 end
 
 
@@ -105,7 +105,7 @@ namespace :lib do
     "you can change the SDK with rake set[sdk]",
     "the .loomlib binary is created in lib/build",
   ].join("\n")
-  task :build => LIBRARY do |t, args|
+  task :build => [LIBRARY] do |t, args|
     puts "[#{t.name}] task completed, find .loomlib in lib/build/"
   end
 
@@ -114,7 +114,7 @@ namespace :lib do
     "the version value will be read from #{LIB_VERSION_FILE}",
     "it must match this regex: #{lib_version_regex}",
   ].join("\n")
-  task :release => LIBRARY do |t, args|
+  task :release => [LIBRARY, 'docs'] do |t, args|
     sdk = lib_config['sdk_version']
     ext = '.loomlib'
     lib = t.prerequisites[0]
@@ -140,7 +140,7 @@ namespace :lib do
     "this updates #{lib_config_file} to define which SDK will compile the loomlib and be the install target",
     "available sdks can be listed with 'rake list_sdks'",
   ].join("\n")
-  task :sdk, [:id] => 'lib:uninstall' do |t, args|
+  task :sdk, [:id] => ['lib:uninstall'] do |t, args|
     args.with_defaults(:id => default_sdk)
     sdk_version = args.id
     lib_dir = LoomTasks.libs_path(sdk_version)
@@ -175,7 +175,7 @@ namespace :lib do
     "installs #{lib_file} into #{lib_config['sdk_version']} SDK",
     "this makes it available to reference in .build files of any project targeting #{lib_config['sdk_version']}",
   ].join("\n")
-  task :install => LIBRARY do |t, args|
+  task :install => [LIBRARY] do |t, args|
     sdk_version = lib_config['sdk_version']
     lib = t.prerequisites[0]
 

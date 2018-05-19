@@ -69,9 +69,9 @@ Rake::Task[:clobber].add_description([
   "removes the following folders:\n  #{CLOBBER.join("\n  ")}",
 ].join("\n"))
 
-task :default => :list_targets
+task :default => [:list_targets]
 
-task :list_targets => :check_consts do |t, args|
+task :list_targets => [:check_consts] do |t, args|
   a = "#{LoomTasks.const_lib_name} v#{LoomTasks.lib_version(const_lib_version_file)} Rakefile"
   b = "running on Ruby #{RUBY_VERSION}"
   puts "#{a} #{b}"

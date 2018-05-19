@@ -28,7 +28,7 @@ DEMO_GUI = File.join('gui', 'bin', "#{LoomTasks.const_lib_name}DemoGUI.loom")
   File.join('gui', 'bin'),
 ].each { |f| CLOBBER << f }
 
-file DEMO_GUI => LIBRARY do |t, args|
+file DEMO_GUI => [LIBRARY] do |t, args|
   puts "[file] creating #{t.name}..."
   compile_demo('gui', "#{LoomTasks.const_lib_name}DemoGUI.build", gui_config)
 end
@@ -38,7 +38,7 @@ FileList[
   File.join('gui', 'src', '*.build'),
   File.join('gui', 'src', '**', '*.ls'),
 ].each do |src|
-  file DEMO_GUI => src
+  file DEMO_GUI => [src]
 end
 
 namespace :gui do
@@ -50,7 +50,7 @@ namespace :gui do
     "the .loom binary is created in gui/bin",
     "you can remove this task from the list with Rake::Task['gui:build'].clear",
   ].join("\n")
-  task :build => DEMO_GUI do |t, args|
+  task :build => [DEMO_GUI] do |t, args|
     puts "[#{t.name}] task completed, find .loom in gui/bin/"
   end
 
@@ -59,7 +59,7 @@ namespace :gui do
     "your demo application class should extend loom.Application",
     "you can remove this task from the list with Rake::Task['gui:run'].clear",
   ].join("\n")
-  task :run => DEMO_GUI do |t, args|
+  task :run => [DEMO_GUI] do |t, args|
     sdk_version = gui_config['sdk_version']
     binary = t.prerequisites[0]
     main = File.join('gui', LoomTasks.main_binary)
@@ -102,6 +102,6 @@ namespace :gui do
 end
 
 desc [
-  "shorthand for rake gui:run",
+  "shorthand for 'rake gui:run'",
 ].join("\n")
-task :gui => 'gui:run'
+task :gui => ['gui:run']

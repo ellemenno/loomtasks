@@ -5,7 +5,7 @@ require 'rbconfig'
 
 module LoomTasks
 
-  VERSION = '3.1.0'
+  VERSION = '3.2.0'
 
   EXIT_OK = 0
 
@@ -24,7 +24,7 @@ module LoomTasks
     LoomTasks.fail(failure_message) if (exec_with_echo(cmd) != EXIT_OK)
   end
 
-  def which(cmd)
+  def path_to_exe(cmd)
     # from https://stackoverflow.com/a/5471032
     exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
 
@@ -174,7 +174,7 @@ module LoomTasks
       File.open(readme_file, 'r') do |f|
         f.read
         .gsub(download_url_regex(), '\1'+new_value+'\3'+sdk_version+'\5')
-        .gsub!(installation_path_regex(), '\1'+sdk_version+'\3')
+        .gsub(installation_path_regex(), '\1'+sdk_version+'\3')
       end
     )
   end

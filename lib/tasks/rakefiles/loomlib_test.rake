@@ -29,7 +29,7 @@ TEST = File.join('test', 'bin', "#{LoomTasks.const_lib_name}Test.loom")
   File.join('test', 'bin')
 ].each { |f| CLOBBER << f }
 
-file TEST => LIBRARY do |t, args|
+file TEST => [LIBRARY] do |t, args|
   puts "[file] creating #{t.name}..."
 
   sdk_version = test_config['sdk_version']
@@ -49,7 +49,7 @@ FileList[
   File.join('test', 'src', '*.build'),
   File.join('test', 'src', '**', '*.ls'),
 ].each do |src|
-  file TEST => src
+  file TEST => [src]
 end
 
 
@@ -61,7 +61,7 @@ namespace :test do
     "you can change the SDK with rake set[sdk]",
     "the .loom binary is created in test/bin",
   ].join("\n")
-  task :build => TEST do |t, args|
+  task :build => [TEST] do |t, args|
     puts "[#{t.name}] task completed, find .loom in test/bin/"
   end
 
@@ -70,7 +70,7 @@ namespace :test do
     "in CI mode, the test runner will print long-form results to stdout and generate jUnit compatible reports",
     "the jUnit xml report files are written to the project root, as TEST-*.xml",
   ].join("\n")
-  task :ci => TEST do |t, args|
+  task :ci => [TEST] do |t, args|
     sdk_version = test_config['sdk_version']
     binary = t.prerequisites[0]
     main = File.join('test', LoomTasks.main_binary)
@@ -92,7 +92,7 @@ namespace :test do
     "runs #{TEST} for the console",
     "the test runner will print short-form results to stdout",
   ].join("\n")
-  task :run, [:seed] => TEST do |t, args|
+  task :run, [:seed] => [TEST] do |t, args|
     sdk_version = test_config['sdk_version']
     binary = t.prerequisites[0]
     main = File.join('test', LoomTasks.main_binary)
@@ -132,6 +132,6 @@ namespace :test do
 end
 
 desc [
-  "shorthand for rake test:run",
+  "shorthand for 'rake test:run'",
 ].join("\n")
-task :test => 'test:run'
+task :test => ['test:run']

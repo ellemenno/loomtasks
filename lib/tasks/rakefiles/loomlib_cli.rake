@@ -19,6 +19,10 @@ def write_cli_config(config)
   LoomTasks.write_loom_config(cli_config_file, config)
 end
 
+def cli_bin_name()
+  LoomTasks.const_lib_name.downcase
+end
+
 def cli_wrapper()
   ext = windows? ? 'bat' : 'sh'
   File.join('cli', 'wrapper', "#{LoomTasks.const_lib_name}.#{ext}")
@@ -42,7 +46,7 @@ DEMO_CLI = File.join('cli', 'bin', "#{LoomTasks.const_lib_name}DemoCLI.loom")
   File.join('cli', 'bin'),
 ].each { |f| CLOBBER << f }
 
-file DEMO_CLI => LIBRARY do |t, args|
+file DEMO_CLI => [LIBRARY] do |t, args|
   puts "[file] creating #{t.name}..."
   compile_demo('cli', "#{LoomTasks.const_lib_name}DemoCLI.build", cli_config)
 end
@@ -52,7 +56,7 @@ FileList[
   File.join('cli', 'src', '*.build'),
   File.join('cli', 'src', '**', '*.ls'),
 ].each do |src|
-  file DEMO_CLI => src
+  file DEMO_CLI => [src]
 end
 
 namespace :cli do
@@ -64,7 +68,7 @@ namespace :cli do
     "the .loom binary is created in cli/bin",
     "you can remove this task from the list with Rake::Task['cli:build'].clear",
   ].join("\n")
-  task :build => DEMO_CLI do |t, args|
+  task :build => [DEMO_CLI] do |t, args|
     puts "[#{t.name}] task completed, find .loom in cli/bin/"
   end
 
@@ -73,7 +77,7 @@ namespace :cli do
     "the binary is renamed 'Main.loom' and stored under #{cli_default_bin_dir}; override with :b",
     "a wrapper script is installed on the path at #{cli_default_path_dir}; override with :p",
   ].join("\n")
-  task :install, [:b, :p] => DEMO_CLI do |t, args|
+  task :install, [:b, :p] => [DEMO_CLI] do |t, args|
     args.with_defaults(
       :b => cli_default_bin_dir,
       :p => cli_default_path_dir,
@@ -87,8 +91,8 @@ namespace :cli do
     cli_path_dir = args.p
     target_bin = File.join(cli_bin_dir, LoomTasks.main_binary)
     target_bin_dir = File.dirname(target_bin)
-    target_exe = File.join(cli_bin_dir, LoomTasks.const_lib_name)
-    target_wrapper = File.join(cli_path_dir, LoomTasks.const_lib_name)
+    target_exe = File.join(cli_bin_dir, cli_bin_name)
+    target_wrapper = File.join(cli_path_dir, cli_bin_name)
 
     if (Dir.exists?(cli_bin_dir))
       puts "[#{t.name}] removing existing #{cli_bin_dir}..."
@@ -110,7 +114,7 @@ namespace :cli do
     FileUtils.cp(cli_wrapper, target_wrapper)
     FileUtils.chmod('u=wrx,go=rx', target_wrapper) # 755 on wrapper script to be executable for all, editable by user
 
-    puts "[#{t.name}] task completed, #{LoomTasks.const_lib_name} installed for use"
+    puts "[#{t.name}] task completed, #{LoomTasks.const_lib_name} installed for use as '#{cli_bin_name}'"
   end
 
   desc [
@@ -118,7 +122,7 @@ namespace :cli do
     "your demo application class should extend system.application.ConsoleApplication",
     "you can remove this task from the list with Rake::Task['cli:run'].clear",
   ].join("\n")
-  task :run, [:options] => DEMO_CLI do |t, args|
+  task :run, [:options] => [DEMO_CLI] do |t, args|
     args.with_defaults(:options => '')
 
     sdk_version = cli_config['sdk_version']
@@ -156,8 +160,8 @@ namespace :cli do
   end
 
   desc [
-    "uninstalls the path executable #{LoomTasks.const_lib_name}",
-    "the executable directory '#{cli_default_bin_dir}' is removed; override with :bin_dir",
+    "uninstalls the system executable '#{cli_bin_name}'",
+    "the executable directory #{cli_default_bin_dir} is removed; override with :b",
     "the wrapper shell script is removed from #{cli_default_path_dir}; override with :p",
   ].join("\n")
   task :uninstall, [:b, :p] do |t, args|
@@ -178,19 +182,19 @@ namespace :cli do
       puts "[#{t.name}] nothing to do; no #{cli_bin_dir} found"
     end
 
-    installed_wrapper = File.join(cli_path_dir, LoomTasks.const_lib_name)
+    installed_wrapper = File.join(cli_path_dir, cli_bin_name)
     if (File.exists?(installed_wrapper))
       FileUtils.rm_r(installed_wrapper)
-      puts "[#{t.name}] task completed, #{LoomTasks.const_lib_name} removed from #{cli_path_dir}"
+      puts "[#{t.name}] task completed, #{cli_bin_name} removed from #{cli_path_dir}"
     else
-      puts "[#{t.name}] nothing to do; no #{LoomTasks.const_lib_name} found in #{cli_path_dir}"
+      puts "[#{t.name}] nothing to do; no #{cli_bin_name} found in #{cli_path_dir}"
     end
   end
 
 end
 
 desc [
-  "shorthand for rake cli:run",
+  "shorthand for 'rake cli:run'",
 ].join("\n")
 task :cli, [:options] do |t, args|
   Rake::Task['cli:run'].invoke(*args)

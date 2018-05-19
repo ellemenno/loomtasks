@@ -24,60 +24,70 @@ See [more details](#more-details) for the list of tasks provided.
 
 ## installation
 
+> requires [Rake][rake]
+
 Clone this repo.
 
-0. Run `rake install` to:
+1. Run `rake install` to:
     * create a `tasks` folder in your Loom SDK home directory (`~/.loom`)
     * install the Rake tasks from this project into it.
-0. Run `rake uninstall` to:
+1. Run `rake uninstall` to:
     * delete the `tasks` folder.
     * _**Note:** this deletes the whole folder! So be careful if you decide to put your own tasks in there._
 
 
 ## usage
 
-0. Scaffold a new project structure:
-    * `rake -f ~/.loom/tasks/scaffolding.rake new:loomlib`
-0. Run `test` to see the auto-created library be built, the test harness run, and the first test fail:
+First, scaffold a new project structure:
+* `rake -f ~/.loom/tasks/scaffolding.rake new:loomlib`
+* `rake docs:install_template`
+
+Then, enter your development cycle:
+1. Run `test` to see the auto-created library be built, the test harness run, and the first test fail:
     * `rake test`
-0. Add your code and tests (in `lib/src/`, and `test/src/`)
+1. Add new code and improved tests (in `lib/src/`, and `test/src/`)
+1. Add new documentation (in `doc/src/`), and regenerate before commits back to GitHub:
+    * `rake docs`
 
 ### more details
 
 Running `rake` in your project directory will execute the default task, which prints the list of available tasks and a short description of what they do:
 
-    Foo v1.2.3 Rakefile running on Ruby 2.3.0
-    rake clean               # removes intermediate files to ensure a clean build
-    rake cli[options]        # shorthand for rake cli:run
-    rake cli:build           # builds cli/bin/FooDemoCLI.loom for sprint34 SDK
-    rake cli:install[b,p]    # installs an executable copy of cli/bin/FooDemoCLI.loom on the system
-    rake cli:run[options]    # executes cli/bin/FooDemoCLI.loom as a commandline app, with options, if provided
-    rake cli:sdk[id]         # sets the provided SDK version into cli/loom.config
-    rake cli:uninstall[b,p]  # uninstalls the path executable Foo
-    rake clobber             # removes all generated artifacts to restore project to checkout-like state
-    rake docs                # shorthand for rake docs:ghpages
-    rake docs:ghpages        # creates docs ready for rendering by github pages, or jekyll
-    rake gui                 # shorthand for rake gui:run
-    rake gui:build           # builds gui/bin/FooDemoGUI.loom for sprint34 SDK
-    rake gui:run             # launches gui/bin/FooDemoGUI.loom as a GUI app
-    rake gui:sdk[id]         # sets the provided SDK version into gui/loom.config
-    rake help                # shows usage and project info, optionally for a specific command
-    rake lib:build           # builds Foo.loomlib for sprint34 SDK
-    rake lib:install         # installs Foo.loomlib into sprint34 SDK
-    rake lib:release         # prepares sdk-specific Foo.loomlib for release, and updates version in README
-    rake lib:sdk[id]         # sets the provided SDK version into lib/loom.config
-    rake lib:show            # lists libs installed for sprint34 SDK
-    rake lib:uninstall       # removes Foo.loomlib from sprint34 SDK
-    rake lib:version[v]      # sets the library version number into lib/src/Foo.build and lib/src/Foo.ls
-    rake list_sdks           # lists loom sdk versions available use
-    rake sdk[id]             # sets the provided SDK version in the config files of lib, cli, gui, and test
-    rake test                # shorthand for rake test:run
-    rake test:build          # builds test/bin/FooTest.loom against sprint34 SDK
-    rake test:ci             # runs test/bin/FooTest.loom for CI
-    rake test:run[seed]      # runs test/bin/FooTest.loom for the console
-    rake test:sdk[id]        # sets the provided SDK version into test/loom.config
-    rake version             # reports loomlib version
-    (using loomtasks v3.1.0)
+    Foo v1.2.3 Rakefile running on Ruby 2.4.1
+    rake clean                  # removes intermediate files to ensure a clean build
+    rake cli[options]           # shorthand for 'rake cli:run'
+    rake cli:build              # builds cli/bin/FooDemoCLI.loom for sprint34 SDK
+    rake cli:install[b,p]       # installs an executable copy of cli/bin/FooDemoCLI.loom on the system
+    rake cli:run[options]       # executes cli/bin/FooDemoCLI.loom as a commandline app, with options, if provided
+    rake cli:sdk[id]            # sets the provided SDK version into cli/loom.config
+    rake cli:uninstall[b,p]     # uninstalls the system executable 'foo'
+    rake clobber                # removes all generated artifacts to restore project to checkout-like state
+    rake docs                   # shorthand for 'rake docs:build'
+    rake docs:build             # builds the GitHub pages documentation site, under 'docs/'
+    rake docs:gen_api           # creates api docs compatible with the programming pages template
+    rake docs:install_template  # downloads the latest programming pages release from GitHub,
+    rake gui                    # shorthand for 'rake gui:run'
+    rake gui:build              # builds gui/bin/FooDemoGUI.loom for sprint34 SDK
+    rake gui:run                # launches gui/bin/FooDemoGUI.loom as a GUI app
+    rake gui:sdk[id]            # sets the provided SDK version into gui/loom.config
+    rake help                   # shows usage and project info, optionally for a specific command
+    rake lib:build              # builds Foo.loomlib for sprint34 SDK
+    rake lib:install            # installs Foo.loomlib into sprint34 SDK
+    rake lib:release            # prepares sdk-specific Foo.loomlib for release, and updates version in README
+    rake lib:sdk[id]            # sets the provided SDK version into lib/loom.config
+    rake lib:show               # lists libs installed for sprint34 SDK
+    rake lib:uninstall          # removes Foo.loomlib from sprint34 SDK
+    rake lib:version[v]         # sets the library version number into lib/src/Foo.build and lib/src/Foo.ls
+    rake list_sdks              # lists loom sdk versions available use
+    rake sdk[id]                # sets the provided SDK version in the config files of lib, cli, gui, and test
+    rake template:update        # downloads the latest release from GitHub, installing to DOC_TEMPLATE_DIR
+    rake test                   # shorthand for 'rake test:run'
+    rake test:build             # builds test/bin/FooTest.loom against sprint34 SDK
+    rake test:ci                # runs test/bin/FooTest.loom for CI
+    rake test:run[seed]         # runs test/bin/FooTest.loom for the console
+    rake test:sdk[id]           # sets the provided SDK version into test/loom.config
+    rake version                # reports loomlib version
+    (using loomtasks v3.2.0)
 
 If you are looking for more detail on any of the tasks, use `rake help`, e.g. `rake help test`.
 
@@ -112,18 +122,21 @@ The loomlib rake tasks make the following assumptions about the layout of a proj
 Support for docs tasks comes from [`loomlib_doc.rake`](lib/tasks/rakefiles/loomlib_doc.rake).
 Use of [lsdoc][lsdoc] is assumed.
 
-`doc/` contains source files to be converted into documentation. The documentation is not packaged with the loomlib; it is generated into a `docs/` directory for [GitHub pages][gh-pages] to render. Note that this requires an option be set for the source code repository (see [Publishing from a docs/ folder][gh-docs]).<br>
+`doc/` contains config, a template, and source files to be converted into documentation. The documentation is not packaged with the loomlib; it is generated into a `docs/` directory for [GitHub pages][gh-pages] to render. Note that this requires an option be set for the source code repository (see [Publishing from a docs/ folder][gh-docs]).<br>
 
     └─doc
-      ├─examples/
-      ├─guides/
-      ├─index.md
-      └─lsdoc.config
+      ├─lsdoc.config
+      ├─src/
+      │ ├─examples/
+      │ ├─guides/
+      │ └─index.md
+      └─template/
 
-* (optional) example pages are written under `doc/examples/`; they will have their own tab in the generated docs site
-* (optional) guide pages are written under `doc/guides/`; they will have their own tab in the generated docs site
 * project level configuration for lsdoc is defined in `doc/lsdoc.config`
-* the documentation home page is written in markdown as `doc/index.md`
+* the documentation home page is written in markdown as `doc/src/index.md`
+* (optional) example pages are written under `doc/src/examples/`; they will have their own tab in the generated docs site
+* (optional) guide pages are written under `doc/src/guides/`; they will have their own tab in the generated docs site
+* the documentation template is stored under `doc/template/`. Use of [Programming Pages][programming-pages] is assumed.
 * [lsdoc][lsdoc] will use the data under `doc/` to create a site under `docs/` that GitHub Pages will render after it is pushed to your GitHub repository
 
 #### demos
@@ -170,15 +183,15 @@ Support for library tasks comes from [`loomlib_lib.rake`](lib/tasks/rakefiles/lo
 
 `lib/` contains the library code, which will be packaged into a `.loomlib` file for installation into a Loom SDK. <br>
 
-    ├─lib
-    │ ├─build
-    │ │ └─Foo.loomlib
-    │ ├─loom.config
-    │ └─src
-    │   ├─Foo.build
-    │   └─com
-    │     └─bar
-    │       └─Foo.ls
+    └─lib
+      ├─build
+      │ └─Foo.loomlib
+      ├─loom.config
+      └─src
+        ├─Foo.build
+        └─com
+          └─bar
+            └─Foo.ls
 
 * the loomlib is built into `lib/build/`
 * the library has its own loom config file at `lib/loom.config`
@@ -230,5 +243,6 @@ Pull requests are welcome!
 [gh-releases]: https://help.github.com/articles/about-releases/ "releases are GitHub's way of packaging and providing software to your users"
 [loomsdk]: https://github.com/LoomSDK/LoomSDK "The Loom SDK, a native mobile app and game framework"
 [lsdoc]: https://github.com/pixeldroid/lsdoc "generate API documentation from doc comments in LoomScript source code"
-[rake]: https://rubygems.org/gems/rake "Rake (Ruby make)"
+[programming-pages]: https://github.com/pixeldroid/programming-pages "A site template for publishing code documentation to GitHub pages"
+[rake]: https://github.com/ruby/rake "A make-like build utility for Ruby"
 [spec-ls]: https://github.com/pixeldroid/spec-ls "a simple specification framework for loom"
