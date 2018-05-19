@@ -101,7 +101,7 @@ def doc_config_template()
 end
 
 def doc_index_pathname()
-  File.join(Dir.pwd, 'doc', 'index.md')
+  File.join(Dir.pwd, 'doc', 'src', 'index.md')
 end
 
 def doc_index_template()
