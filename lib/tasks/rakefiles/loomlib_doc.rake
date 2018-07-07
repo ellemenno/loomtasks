@@ -117,7 +117,7 @@ namespace :docs do
       response = Net::HTTP.get_response(uri)
       LoomTasks.fail("#{response.code} - failed to access GitHub API at '#{PP_RELEASE_API}'") unless (response.code == '200')
     rescue SocketError
-      ProgP.fail("failed to connect; is there network access?")
+      LoomTasks.fail("failed to connect; is there network access?")
     end
 
     result = JSON.parse(response.body)
