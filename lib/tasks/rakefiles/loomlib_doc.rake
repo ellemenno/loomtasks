@@ -79,7 +79,7 @@ end
 unless Rake::Task.task_defined?('docs:build')
   begin
     load(File.join(DOC_TEMPLATE_DIR, '_tasks', 'programming-pages.rake'))
-    Rake::Task['list_targets'].enhance { puts "(using programming-pages v#{template_version})" }
+    Rake::Task['list_targets'].enhance { puts "(using programming-pages #{template_version})" }
     Rake::Task['docs:build'].enhance ['docs:gen_api'] # add a pre-req
     Rake::Task['docs:build'].enhance { Rake::Task['docs:rm_build_dir'].invoke() } # add a post-step
   rescue LoadError
