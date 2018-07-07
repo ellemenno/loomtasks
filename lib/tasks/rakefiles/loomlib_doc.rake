@@ -63,6 +63,19 @@ PROJECT_ROOT = Dir.pwd
 DOC_TEMPLATE_DIR = File.join(PROJECT_ROOT, 'doc', 'template')
 DOC_SOURCE_DIR = doc_build_dir
 
+TOOL_ERRORS = {
+  :lsdoc => 'lsdoc not installed. See https://github.com/pixeldroid/lsdoc',
+  :progp => 'missing programming-pages.rake. try rake docs:install_template'
+}
+
+lsdoc_exe = LoomTasks.path_to_exe('lsdoc')
+if lsdoc_exe
+  lsdoc_version = %x(#{lsdoc_exe} -v 2>&1).chomp
+  Rake::Task['list_targets'].enhance { puts "(using #{lsdoc_version})" }
+else
+  Rake::Task['list_targets'].enhance { puts "(NOTE: #{TOOL_ERRORS[:lsdoc]})" }
+end
+
 unless Rake::Task.task_defined?('docs:build')
   begin
     load(File.join(DOC_TEMPLATE_DIR, '_tasks', 'programming-pages.rake'))
@@ -72,7 +85,7 @@ unless Rake::Task.task_defined?('docs:build')
   rescue LoadError
     # silent failure here, since it's not fatal,
     # and the user needs to be given a chance to install the template
-    Rake::Task['list_targets'].enhance { puts "(NOTE: programming-pages template not yet installed; run: rake docs:install_template)" }
+    Rake::Task['list_targets'].enhance { puts "(NOTE: #{TOOL_ERRORS[:progp]})" }
   end
 end
 
@@ -93,8 +106,8 @@ end
 namespace :docs do
 
   task :check_tools do |t, args|
-    LoomTasks.fail('lsdoc not installed. See https://github.com/pixeldroid/lsdoc') unless (LoomTasks.path_to_exe('lsdoc'))
-    LoomTasks.fail('missing programming-pages.rake. try rake docs:install_template') unless Rake::Task.task_defined?('docs:build')
+    LoomTasks.fail(TOOL_ERRORS[:lsdoc]) unless LoomTasks.path_to_exe('lsdoc')
+    LoomTasks.fail(TOOL_ERRORS[:progp]) unless Rake::Task.task_defined?('docs:build')
   end
 
   task :update_version do |t, args|
@@ -107,7 +120,7 @@ namespace :docs do
   end
 
   desc [
-    "downloads the latest programming pages release from GitHub,",
+    "downloads the latest programming pages release from GitHub",
     "  installs to DOC_TEMPLATE_DIR",
   ].join("\n")
   task :install_template do |t, args|

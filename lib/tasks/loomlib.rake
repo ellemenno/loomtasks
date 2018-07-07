@@ -71,7 +71,7 @@ task :list_targets => [:check_consts] do |t, args|
   b = "running on Ruby #{RUBY_VERSION}"
   puts "#{a} #{b}"
   system('rake -T')
-  puts "(using loomtasks v#{LoomTasks::VERSION})"
+  puts "(using loomtasks #{LoomTasks::VERSION})"
 end
 
 task :check_consts do |t, args|
