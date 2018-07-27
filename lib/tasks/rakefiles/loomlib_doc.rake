@@ -26,25 +26,18 @@ def write_doc_config(config)
   LoomTasks.write_loom_config(doc_config_file, config)
 end
 
-def build_docs(config_path, in_dir, out_dir, template_dir)
+def build_docs(config_path, in_dir, out_dir)
   sdk_version = lib_config['sdk_version']
   sdk_dir = LoomTasks.sdk_root(sdk_version)
   processor = 'ghpages'
 
   options = [
     "-p #{processor}",
-    "-t #{template_dir}",
-    "-l #{sdk_dir}/libs/#{LoomTasks.const_lib_name}.loomlib",
-    "-o #{out_dir}",
     "-c #{config_path}",
-    "-i #{in_dir}/index.md",
+    "-l #{sdk_dir}/libs/#{LoomTasks.const_lib_name}.loomlib",
+    "-i #{in_dir}",
+    "-o #{out_dir}",
   ]
-
-  examples_dir = File.join(in_dir, 'examples')
-  guides_dir = File.join(in_dir, 'guides')
-
-  options << "-e #{examples_dir}" if (Dir.exists?(examples_dir))
-  options << "-g #{guides_dir}" if (Dir.exists?(guides_dir))
 
   cmd = "lsdoc #{options.join(' ')}"
   try(cmd, "failed to generate docs")
@@ -61,7 +54,7 @@ LIB_DOC = 'docs'
 PP_RELEASE_API = 'https://api.github.com/repos/pixeldroid/programming-pages/releases/latest'
 PROJECT_ROOT = Dir.pwd
 DOC_TEMPLATE_DIR = File.join(PROJECT_ROOT, 'doc', 'template')
-DOC_SOURCE_DIR = doc_build_dir
+DOC_SOURCE_DIR = File.join(PROJECT_ROOT, 'doc', 'src')
 
 TOOL_ERRORS = {
   :lsdoc => 'lsdoc not installed. See https://github.com/pixeldroid/lsdoc',
@@ -79,8 +72,8 @@ end
 unless Rake::Task.task_defined?('docs:build')
   begin
     load(File.join(DOC_TEMPLATE_DIR, '_tasks', 'programming-pages.rake'))
-    Rake::Task['list_targets'].enhance { puts "(using programming-pages #{template_version})" }
-    Rake::Task['docs:build'].enhance ['docs:gen_api'] # add a pre-req
+    Rake::Task['list_targets'].enhance { puts "(using programming-pages #{template_version})" } # template_version from programming-pages.rake
+    Rake::Task['docs:build'].enhance ['docs:gen_api', 'docs:cp_build_dir'] # add pre-reqs
     Rake::Task['docs:build'].enhance { Rake::Task['docs:rm_build_dir'].invoke() } # add a post-step
   rescue LoadError
     # silent failure here, since it's not fatal,
@@ -185,15 +178,26 @@ namespace :docs do
       puts "[#{t.name}] emptying #{out_dir} to start clean"
     end
 
-    build_docs(config_path, in_dir, out_dir, template_dir)
+    puts "[#{t.name}] generating api files..."
+    build_docs(config_path, in_dir, out_dir)
 
-    puts "[#{t.name}] task completed, docs generated into #{out_dir}"
+    puts "[#{t.name}] task completed, api docs generated into #{out_dir}"
+  end
+
+  task :cp_build_dir do |t, args|
+    if (Dir.exists?(doc_build_dir))
+      target_dir = ghpages_dir # loaded from programming-pages.rake
+      puts "[#{t.name}] adding api files..."
+      FileUtils.cp_r(File.join(doc_build_dir, '.'), target_dir)
+    else
+      puts "[#{t.name}] no api files found in #{doc_build_dir}"
+    end
   end
 
   task :rm_build_dir do |t, args|
     if (Dir.exists?(doc_build_dir))
-      FileUtils.rm_rf(doc_build_dir)
       puts "[#{t.name}] removing temporary build dir #{doc_build_dir}"
+      FileUtils.rm_rf(doc_build_dir)
     end
   end
 
