@@ -11,7 +11,7 @@ include LoomTasks
 @doc_config = nil
 
 def doc_config()
-  @doc_config || (@doc_config = LoomTasks.parse_loom_config(doc_config_file))
+  @doc_config || (@doc_config = LoomTasks.parse_yaml_config(doc_config_file))
 end
 
 def doc_build_dir()
@@ -19,11 +19,11 @@ def doc_build_dir()
 end
 
 def doc_config_file()
-  File.join('doc', 'lsdoc.config')
+  File.join('doc', 'src', '_config.yml')
 end
 
 def write_doc_config(config)
-  LoomTasks.write_loom_config(doc_config_file, config)
+  LoomTasks.write_yaml_config(doc_config_file, config)
 end
 
 def build_docs(config_path, in_dir, out_dir)
