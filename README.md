@@ -65,7 +65,7 @@ Running `rake` in your project directory will execute the default task, which pr
     rake docs                   # shorthand for 'rake docs:build'
     rake docs:build             # builds the GitHub pages documentation site, under 'docs/'
     rake docs:gen_api           # creates api docs compatible with the programming pages template
-    rake docs:install_template  # downloads the latest programming pages release from GitHub,
+    rake docs:install_template  # downloads the latest programming pages release from GitHub
     rake gui                    # shorthand for 'rake gui:run'
     rake gui:build              # builds gui/bin/FooDemoGUI.loom for sprint34 SDK
     rake gui:run                # launches gui/bin/FooDemoGUI.loom as a GUI app
@@ -81,15 +81,20 @@ Running `rake` in your project directory will execute the default task, which pr
     rake list_sdks              # lists loom sdk versions available use
     rake sdk[id]                # sets the provided SDK version in the config files of lib, cli, gui, and test
     rake template:update        # downloads the latest release from GitHub, installing to DOC_TEMPLATE_DIR
+    rake template:version       # reports installed and available versions of programming pages template
     rake test                   # shorthand for 'rake test:run'
     rake test:build             # builds test/bin/FooTest.loom against sprint34 SDK
     rake test:ci                # runs test/bin/FooTest.loom for CI
     rake test:run[seed]         # runs test/bin/FooTest.loom for the console
     rake test:sdk[id]           # sets the provided SDK version into test/loom.config
     rake version                # reports loomlib version
-    (using loomtasks v3.2.0)
+    (using loomtasks 3.2.0)
+    (using lsdoc 2.0.0)
+    (using programming-pages 0.5.6)
 
 If you are looking for more detail on any of the tasks, use `rake help`, e.g. `rake help test`.
+
+The [Programming Pages][programming-pages] template is not packaged with loomtasks releases. Running the `docs:install_template` task will download it from GitHub and extract it into your project.
 
 The Rake tasks are defined with dependencies and modification triggers, so you can just run `rake test` every time you edit a source file, and the library and test app will be rebuilt as needed automatically.
 
@@ -125,19 +130,19 @@ Use of [lsdoc][lsdoc] is assumed.
 `doc/` contains config, a template, and source files to be converted into documentation. The documentation is not packaged with the loomlib; it is generated into a `docs/` directory for [GitHub pages][gh-pages] to render. Note that this requires an option be set for the source code repository (see [Publishing from a docs/ folder][gh-docs]).<br>
 
     └─doc
-      ├─lsdoc.config
       ├─src/
+      │ ├─_config.yml
       │ ├─examples/
       │ ├─guides/
       │ └─index.md
       └─template/
 
-* project level configuration for lsdoc is defined in `doc/lsdoc.config`
+* project level configuration for lsdoc is defined in `doc/src/_config.yml`
 * the documentation home page is written in markdown as `doc/src/index.md`
 * (optional) example pages are written under `doc/src/examples/`; they will have their own tab in the generated docs site
 * (optional) guide pages are written under `doc/src/guides/`; they will have their own tab in the generated docs site
-* the documentation template is stored under `doc/template/`. Use of [Programming Pages][programming-pages] is assumed.
-* [lsdoc][lsdoc] will use the data under `doc/` to create a site under `docs/` that GitHub Pages will render after it is pushed to your GitHub repository
+* the documentation template is stored under `doc/template/`. Use of [Programming Pages][programming-pages] is assumed
+* [lsdoc][lsdoc] will use the files under `doc/` to create a site under `docs/` that GitHub Pages will render after it is pushed to your GitHub repository
 
 #### demos
 

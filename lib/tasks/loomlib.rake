@@ -47,11 +47,6 @@ def compile_demo(dir, build_file, demo_config)
   end
 end
 
-Dir.glob(File.join(File.dirname(__FILE__), 'rakefiles', '*.rake')).each do |rakefile|
-  # don't load rakefiles for non-existent modules
-  dir = File.basename(rakefile).match(/loomlib_(.*)\.rake/)[1]
-  load rakefile if Dir.exists?(dir)
-end
 
 [File.join('releases', '**')].each { |f| CLEAN << f }
 Rake::Task[:clean].clear_comments()
@@ -76,12 +71,19 @@ task :list_targets => [:check_consts] do |t, args|
   b = "running on Ruby #{RUBY_VERSION}"
   puts "#{a} #{b}"
   system('rake -T')
-  puts "(using loomtasks v#{LoomTasks::VERSION})"
+  puts "(using loomtasks #{LoomTasks::VERSION})"
 end
 
 task :check_consts do |t, args|
   LoomTasks.fail("please define the LIB_NAME constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_name
   LoomTasks.fail("please define the LIB_VERSION_FILE constant before loading #{File.basename(__FILE__)}") unless LoomTasks.const_lib_version_file
+end
+
+
+Dir.glob(File.join(File.dirname(__FILE__), 'rakefiles', '*.rake')).each do |rakefile|
+  # don't load rakefiles for non-existent modules
+  dir = File.basename(rakefile).match(/loomlib_(.*)\.rake/)[1]
+  load rakefile if Dir.exists?(dir)
 end
 
 

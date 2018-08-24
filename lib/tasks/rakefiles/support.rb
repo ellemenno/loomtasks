@@ -2,6 +2,7 @@
 
 require 'json'
 require 'rbconfig'
+require 'yaml'
 
 module LoomTasks
 
@@ -117,7 +118,15 @@ module LoomTasks
   end
 
   def write_loom_config(file, config)
-    File.open(file, 'w') { |f| f.write("#{JSON.pretty_generate(config)}\n") }
+    IO.write(file, "#{JSON.pretty_generate(config)}\n")
+  end
+
+  def parse_yaml_config(file)
+    File.file?(file) ? YAML.load(File.read(file)) : {}
+  end
+
+  def write_yaml_config(file, config)
+    IO.write(file, "#{config.to_yaml}\n")
   end
 
   def const_find(name)

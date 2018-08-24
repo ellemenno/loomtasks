@@ -93,11 +93,11 @@ def demo_gui_template()
 end
 
 def doc_config_pathname()
-  File.join(Dir.pwd, 'doc', 'lsdoc.config')
+  File.join(Dir.pwd, 'doc', 'src', '_config.yml')
 end
 
 def doc_config_template()
-  File.join(template_dir, 'lsdoc.config.erb')
+  File.join(template_dir, 'lsdoc_config.erb')
 end
 
 def doc_index_pathname()
@@ -105,7 +105,7 @@ def doc_index_pathname()
 end
 
 def doc_index_template()
-  File.join(template_dir, 'index.md.erb')
+  File.join(template_dir, 'lsdoc_index.erb')
 end
 
 def lib_testapp_pathname()
