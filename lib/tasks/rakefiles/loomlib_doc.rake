@@ -197,9 +197,8 @@ namespace :docs do
 
   task :rm_build_dir do |t, args|
     if (Dir.exists?(doc_build_dir))
-      puts "[#{t.name}] NOT removing temporary build dir #{doc_build_dir}"
-      # puts "[#{t.name}] removing temporary build dir #{doc_build_dir}"
-      # FileUtils.rm_rf(doc_build_dir)
+      puts "[#{t.name}] removing temporary build dir #{doc_build_dir}"
+      FileUtils.rm_rf(doc_build_dir)
     end
   end
 
