@@ -93,7 +93,7 @@ def demo_gui_template()
 end
 
 def doc_config_pathname()
-  File.join(Dir.pwd, 'doc', '_config.yml')
+  File.join(Dir.pwd, 'doc', 'src', '_config.yml')
 end
 
 def doc_config_template()
