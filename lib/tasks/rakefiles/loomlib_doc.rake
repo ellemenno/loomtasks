@@ -187,7 +187,8 @@ namespace :docs do
   task :cp_build_dir do |t, args|
     if (Dir.exists?(doc_build_dir))
       target_dir = ghpages_dir # loaded from programming-pages.rake
-      puts "[#{t.name}] adding api files..."
+      puts "[#{t.name}] adding api files from #{doc_build_dir}..."
+      puts "[#{t.name}]   to #{target_dir}..."
       FileUtils.cp_r(File.join(doc_build_dir, '.'), target_dir)
     else
       puts "[#{t.name}] no api files found in #{doc_build_dir}"
@@ -196,8 +197,9 @@ namespace :docs do
 
   task :rm_build_dir do |t, args|
     if (Dir.exists?(doc_build_dir))
-      puts "[#{t.name}] removing temporary build dir #{doc_build_dir}"
-      FileUtils.rm_rf(doc_build_dir)
+      puts "[#{t.name}] NOT removing temporary build dir #{doc_build_dir}"
+      # puts "[#{t.name}] removing temporary build dir #{doc_build_dir}"
+      # FileUtils.rm_rf(doc_build_dir)
     end
   end
 
