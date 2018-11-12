@@ -92,20 +92,32 @@ def demo_gui_template()
   File.join(template_dir, 'LoomlibDemoGUI.ls.erb')
 end
 
-def doc_config_pathname()
-  File.join(Dir.pwd, 'doc', 'src', '_config.yml')
+def lsdoc_pathname()
+  File.join(Dir.home, '.loom', 'LSDoc')
 end
 
-def doc_config_template()
-  File.join(template_dir, 'lsdoc_config.erb')
+def docs_pathname()
+  File.join(Dir.pwd, 'docs')
 end
 
-def doc_index_pathname()
-  File.join(Dir.pwd, 'doc', 'src', 'index.md')
+def docs_gemfile()
+  File.join(template_dir, 'lsdoc', 'Gemfile')
 end
 
-def doc_index_template()
-  File.join(template_dir, 'lsdoc_index.erb')
+def docs_config_pathname()
+  File.join(docs_pathname, '_config.yml')
+end
+
+def docs_config_template()
+  File.join(template_dir, 'lsdoc', 'config.erb')
+end
+
+def docs_index_pathname()
+  File.join(docs_pathname, 'index.md')
+end
+
+def docs_index_template()
+  File.join(template_dir, 'lsdoc', 'index.erb')
 end
 
 def lib_testapp_pathname()
@@ -287,11 +299,15 @@ namespace :new do
     create_from_template(cli_wrapper_pathname, cli_wrapper_template, context)
   end
 
-  task :doc do |t, args|
+  task :docs do |t, args|
     context = template_context
 
-    create_from_template(doc_config_pathname, doc_config_template, context)
-    create_from_template(doc_index_pathname, doc_index_template, context)
+    copy_from_template(docs_pathname, docs_gemfile)
+    create_from_template(docs_config_pathname, docs_config_template, context)
+    create_from_template(docs_index_pathname, docs_index_template, context)
+    copy_from_template(docs_pathname, File.join(lsdoc_pathname, '_data'))
+    copy_from_template(docs_pathname, File.join(lsdoc_pathname, '_includes'))
+    copy_from_template(docs_pathname, File.join(lsdoc_pathname, '_layouts'))
   end
 
   task :gui do |t, args|
@@ -325,7 +341,7 @@ namespace :new do
     create_from_template(lib_testspec_pathname, lib_testspec_template, context)
   end
 
-  task :scaffold => [:gitignore, :rakefile, :lib, :test, :cli, :gui, :doc]
+  task :scaffold => [:gitignore, :rakefile, :lib, :test, :cli, :gui, :docs]
 
   desc [
     "scaffolds the directories and files for a new loomlib project",
