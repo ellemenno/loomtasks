@@ -53,44 +53,42 @@ Then, enter your development cycle:
 
 Running `rake` in your project directory will execute the default task, which prints the list of available tasks and a short description of what they do:
 
-    Foo v1.2.3 Rakefile running on Ruby 2.4.1
-    rake clean                  # removes intermediate files to ensure a clean build
-    rake cli[options]           # shorthand for 'rake cli:run'
-    rake cli:build              # builds cli/bin/FooDemoCLI.loom for sprint34 SDK
-    rake cli:install[b,p]       # installs an executable copy of cli/bin/FooDemoCLI.loom on the system
-    rake cli:run[options]       # executes cli/bin/FooDemoCLI.loom as a commandline app, with options, if provided
-    rake cli:sdk[id]            # sets the provided SDK version into cli/loom.config
-    rake cli:uninstall[b,p]     # uninstalls the system executable 'foo'
-    rake clobber                # removes all generated artifacts to restore project to checkout-like state
-    rake docs                   # shorthand for 'rake docs:build'
-    rake docs:build             # builds the GitHub pages documentation site, under 'docs/'
-    rake docs:gen_api           # creates api docs compatible with the programming pages template
-    rake docs:install_template  # downloads the latest programming pages release from GitHub
-    rake gui                    # shorthand for 'rake gui:run'
-    rake gui:build              # builds gui/bin/FooDemoGUI.loom for sprint34 SDK
-    rake gui:run                # launches gui/bin/FooDemoGUI.loom as a GUI app
-    rake gui:sdk[id]            # sets the provided SDK version into gui/loom.config
-    rake help                   # shows usage and project info, optionally for a specific command
-    rake lib:build              # builds Foo.loomlib for sprint34 SDK
-    rake lib:install            # installs Foo.loomlib into sprint34 SDK
-    rake lib:release            # prepares sdk-specific Foo.loomlib for release, and updates version in README
-    rake lib:sdk[id]            # sets the provided SDK version into lib/loom.config
-    rake lib:show               # lists libs installed for sprint34 SDK
-    rake lib:uninstall          # removes Foo.loomlib from sprint34 SDK
-    rake lib:version[v]         # sets the library version number into lib/src/Foo.build and lib/src/Foo.ls
-    rake list_sdks              # lists loom sdk versions available use
-    rake sdk[id]                # sets the provided SDK version in the config files of lib, cli, gui, and test
-    rake template:update        # downloads the latest release from GitHub, installing to DOC_TEMPLATE_DIR
-    rake template:version       # reports installed and available versions of programming pages template
-    rake test                   # shorthand for 'rake test:run'
-    rake test:build             # builds test/bin/FooTest.loom against sprint34 SDK
-    rake test:ci                # runs test/bin/FooTest.loom for CI
-    rake test:run[seed]         # runs test/bin/FooTest.loom for the console
-    rake test:sdk[id]           # sets the provided SDK version into test/loom.config
-    rake version                # reports loomlib version
-    (using loomtasks 3.2.0)
+    $ rake
+    Foo v1.2.3 Rakefile running on Ruby 2.5.1
+    rake clean               # removes intermediate files to ensure a clean build
+    rake cli[options]        # shorthand for 'rake cli:run'
+    rake cli:build           # builds cli/bin/FooDemoCLI.loom for sprint34 SDK
+    rake cli:install[b,p]    # installs an executable copy of cli/bin/FooDemoCLI.loom on the system
+    rake cli:run[options]    # executes cli/bin/FooDemoCLI.loom as a commandline app, with options, if provided
+    rake cli:sdk[id]         # sets the provided SDK version into cli/loom.config
+    rake cli:uninstall[b,p]  # uninstalls the system executable 'foo'
+    rake clobber             # removes all generated artifacts to restore project to checkout-like state
+    rake docs                # builds and serves the documentation site
+    rake docs:build_site     # calls jekyll to [just] generate the docs site
+    rake docs:gen_api        # creates api docs compatible with the programming pages template
+    rake docs:serve_site     # calls jekyll to serve the docs site, without first building it
+    rake gui                 # shorthand for 'rake gui:run'
+    rake gui:build           # builds gui/bin/FooDemoGUI.loom for sprint34 SDK
+    rake gui:run             # launches gui/bin/FooDemoGUI.loom as a GUI app
+    rake gui:sdk[id]         # sets the provided SDK version into gui/loom.config
+    rake help                # shows usage and project info, optionally for a specific command
+    rake lib:build           # builds Foo.loomlib for sprint34 SDK
+    rake lib:install         # installs Foo.loomlib into sprint34 SDK
+    rake lib:release         # prepares sdk-specific Foo.loomlib for release, and updates version in README
+    rake lib:sdk[id]         # sets the provided SDK version into lib/loom.config
+    rake lib:show            # lists libs installed for sprint34 SDK
+    rake lib:uninstall       # removes Foo.loomlib from sprint34 SDK
+    rake lib:version[v]      # sets the library version number into lib/src/Foo.build and lib/src/Foo.ls
+    rake list_sdks           # lists loom sdk versions available use
+    rake sdk[id]             # sets the provided SDK version in the config files of lib, cli, gui, and test
+    rake test                # shorthand for 'rake test:run'
+    rake test:build          # builds test/bin/FooTest.loom against sprint34 SDK
+    rake test:ci             # runs test/bin/FooTest.loom for CI
+    rake test:run[seed]      # runs test/bin/FooTest.loom for the console
+    rake test:sdk[id]        # sets the provided SDK version into test/loom.config
+    rake version             # reports loomlib version
+    (using loomtasks 3.2.2)
     (using lsdoc 2.0.0)
-    (using programming-pages 0.5.6)
 
 If you are looking for more detail on any of the tasks, use `rake help`, e.g. `rake help test`.
 
