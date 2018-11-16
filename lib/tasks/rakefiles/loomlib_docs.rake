@@ -62,7 +62,8 @@ end
 
 TOOL_ERRORS = {
   :lsdoc => 'lsdoc not installed. See https://github.com/pixeldroid/lsdoc',
-  :bundler => 'gem dependencies not all resolved. Please run `bundle install`',
+  :bundler => 'gem dependencies not all resolved. Please run: bundle install',
+  :doc_config => "missing doc config.\nTo scaffold a new docs directory, run: rake -f ~/.loom/tasks/scaffolding.rake new:docs",
 }
 
 lsdoc_exe = LoomTasks.path_to_exe('lsdoc')
@@ -79,6 +80,7 @@ namespace :docs do
   task :check_tools do |t, args|
     LoomTasks.fail(TOOL_ERRORS[:lsdoc]) unless LoomTasks.path_to_exe('lsdoc')
     LoomTasks.fail(TOOL_ERRORS[:bundler]) unless (LoomTasks.exec_with_echo('bundle check') == LoomTasks::EXIT_OK)
+    LoomTasks.fail(TOOL_ERRORS[:doc_config]) if (doc_config.empty?)
   end
 
   task :update_version do |t, args|
