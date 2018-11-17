@@ -36,8 +36,8 @@ def jekyll_build
   jekyll_cmd('build')
 end
 
-def jekyll_serve
-  jekyll_cmd('serve')
+def jekyll_watch
+  jekyll_cmd('serve --watch')
 end
 
 def jekyll_serve_only
@@ -120,6 +120,20 @@ namespace :docs do
   task :build_site => ['docs:gen_api'] do |t, args|
     try(jekyll_build, 'unable to create docs')
     puts "[#{t.name}] task completed, find updated docs in ./_site"
+  end
+
+  desc [
+    "calls jekyll to watch the docs and rebuild the site when files are changed",
+    "  use CTRL-c to exit",
+    "  cmd: #{jekyll_watch}",
+  ].join("\n")
+  task :watch_site do |t, args|
+    begin                 # run jekyll
+      puts jekyll_watch
+      system(jekyll_watch)
+    rescue Exception => e # capture the interrupt signal from a quit app
+      puts ' (quit)'
+    end
   end
 
   desc [
