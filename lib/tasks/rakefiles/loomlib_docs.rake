@@ -100,7 +100,7 @@ namespace :docs do
     "sets the library version number into #{doc_config_file}",
     "  #{doc_config_file} is expected to have a project.version key",
   ].join("\n")
-  task :gen_api => ['docs:check_tools', 'docs:update_version'] do |t, args|
+  task :gen_api => ['docs:check_tools', 'docs:update_version', 'lib:install'] do |t, args|
 
     if (Dir.exists?(doc_api_dir))
       FileUtils.rm_r(Dir.glob(File.join(doc_api_dir, '*')))
