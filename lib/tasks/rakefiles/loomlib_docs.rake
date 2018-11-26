@@ -37,7 +37,7 @@ def jekyll_build
 end
 
 def jekyll_watch
-  jekyll_cmd('serve --watch')
+  jekyll_cmd('serve --watch --incremental')
 end
 
 def jekyll_serve_only
