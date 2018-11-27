@@ -6,7 +6,7 @@ require 'yaml'
 
 module LoomTasks
 
-  VERSION = '3.2.2'
+  VERSION = '3.3.0'
 
   EXIT_OK = 0
 

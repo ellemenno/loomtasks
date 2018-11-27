@@ -36,8 +36,8 @@ def jekyll_build
   jekyll_cmd('build')
 end
 
-def jekyll_serve
-  jekyll_cmd('serve')
+def jekyll_watch
+  jekyll_cmd('serve --watch --incremental')
 end
 
 def jekyll_serve_only
@@ -62,7 +62,8 @@ end
 
 TOOL_ERRORS = {
   :lsdoc => 'lsdoc not installed. See https://github.com/pixeldroid/lsdoc',
-  :bundler => 'gem dependencies not all resolved. Please run `bundle install`',
+  :bundler => 'gem dependencies not all resolved. Please run: bundle install',
+  :doc_config => "missing doc config.\nTo scaffold a new docs directory, run: rake -f ~/.loom/tasks/scaffolding.rake new:docs",
 }
 
 lsdoc_exe = LoomTasks.path_to_exe('lsdoc')
@@ -79,6 +80,7 @@ namespace :docs do
   task :check_tools do |t, args|
     LoomTasks.fail(TOOL_ERRORS[:lsdoc]) unless LoomTasks.path_to_exe('lsdoc')
     LoomTasks.fail(TOOL_ERRORS[:bundler]) unless (LoomTasks.exec_with_echo('bundle check') == LoomTasks::EXIT_OK)
+    LoomTasks.fail(TOOL_ERRORS[:doc_config]) if (doc_config.empty?)
   end
 
   task :update_version do |t, args|
@@ -98,7 +100,7 @@ namespace :docs do
     "sets the library version number into #{doc_config_file}",
     "  #{doc_config_file} is expected to have a project.version key",
   ].join("\n")
-  task :gen_api => ['docs:check_tools', 'docs:update_version'] do |t, args|
+  task :gen_api => ['docs:check_tools', 'docs:update_version', 'lib:install'] do |t, args|
 
     if (Dir.exists?(doc_api_dir))
       FileUtils.rm_r(Dir.glob(File.join(doc_api_dir, '*')))
@@ -118,6 +120,20 @@ namespace :docs do
   task :build_site => ['docs:gen_api'] do |t, args|
     try(jekyll_build, 'unable to create docs')
     puts "[#{t.name}] task completed, find updated docs in ./_site"
+  end
+
+  desc [
+    "calls jekyll to watch the docs and rebuild the site when files are changed",
+    "  use CTRL-c to exit",
+    "  cmd: #{jekyll_watch}",
+  ].join("\n")
+  task :watch_site do |t, args|
+    begin                 # run jekyll
+      puts jekyll_watch
+      system(jekyll_watch)
+    rescue Exception => e # capture the interrupt signal from a quit app
+      puts ' (quit)'
+    end
   end
 
   desc [

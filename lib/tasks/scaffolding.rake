@@ -12,11 +12,21 @@ def global_config_file
 end
 
 def default_loom_sdk
-  JSON.parse(File.read(global_config_file))["default_sdk"]
+  JSON.parse(File.read(global_config_file))['default_sdk']
 end
 
 def lib_name()
-  @lib_name || LoomTasks.fail("no lib name defined")
+  @lib_name || LoomTasks.fail('no lib name defined')
+end
+
+def read_lib_name
+  LoomTasks.fail('no Rakefile to read lib name from') unless File.exists?(rakefile_pathname)
+
+  File.open(rakefile_pathname,'r').each do |line|
+    if (match = line.match(/\s*LIB_NAME = ['"](.*)['"]/))
+      return match.captures.first
+    end
+  end
 end
 
 def template_dir
@@ -34,7 +44,7 @@ end
 
 def copy_from_template(dir, files)
   FileUtils.mkdir_p(dir)
-  FileUtils.cp(files, dir)
+  FileUtils.cp_r(files, dir)
 end
 
 def create_from_string(pathname, contents)
@@ -242,6 +252,10 @@ def loomconfig_demo_contents()
 end
 
 
+def gemfile_pathname()
+  File.join(Dir.pwd, 'Gemfile')
+end
+
 def rakefile_pathname()
   File.join(Dir.pwd, 'Rakefile')
 end
@@ -263,6 +277,7 @@ task :default => [:usage]
 
 task :usage do |t, args|
   this_file = File.basename(__FILE__)
+
   puts ''
   puts "#{this_file} v#{VERSION}: a utility to create a new loomlib directory structure"
   puts ''
@@ -271,6 +286,12 @@ task :usage do |t, args|
   puts '$ cd MyLoomlib'
   puts "$ rake -f #{File.join(Dir.home, '.loom', 'tasks', this_file)} new:loomlib[MyLoomlib]"
   puts '$ rake'
+  puts ''
+  puts 'you can also call the tasks individually to add to an existing project'
+  puts 'take care, as this will overwrite files, if there are any pre-existing ones:'
+  puts ''
+
+  system("rake -D -f #{__FILE__}")
 end
 
 namespace :new do
@@ -288,7 +309,11 @@ namespace :new do
     create_from_template(rakefile_pathname, rakefile_template, context)
   end
 
-  task :cli do |t, args|
+  desc [
+    "scaffolds the 'cli' directories and files for a new loomlib project",
+    "this task assumes (but does not enforce) it is the first to create these files",
+  ].join("\n")
+  task :cli => [:read_lib_name] do |t, args|
     name = "#{lib_name}DemoCLI"
 
     context = template_context
@@ -299,10 +324,14 @@ namespace :new do
     create_from_template(cli_wrapper_pathname, cli_wrapper_template, context)
   end
 
-  task :docs do |t, args|
+  desc [
+    "scaffolds the 'docs' directories and files for a new loomlib project",
+    "this task assumes (but does not enforce) it is the first to create these files",
+  ].join("\n")
+  task :docs => [:read_lib_name] do |t, args|
     context = template_context
 
-    copy_from_template(docs_pathname, docs_gemfile)
+    copy_from_template(Dir.pwd, docs_gemfile)
     create_from_template(docs_config_pathname, docs_config_template, context)
     create_from_template(docs_index_pathname, docs_index_template, context)
     copy_from_template(docs_pathname, File.join(lsdoc_pathname, '_data'))
@@ -310,7 +339,11 @@ namespace :new do
     copy_from_template(docs_pathname, File.join(lsdoc_pathname, '_layouts'))
   end
 
-  task :gui do |t, args|
+  desc [
+    "scaffolds the 'gui' directories and files for a new loomlib project",
+    "this task assumes (but does not enforce) it is the first to create these files",
+  ].join("\n")
+  task :gui => [:read_lib_name] do |t, args|
     name = "#{lib_name}DemoGUI"
 
     context = template_context
@@ -322,7 +355,11 @@ namespace :new do
     copy_from_template(demo_gui_assets_pathname, demo_gui_assets)
   end
 
-  task :lib do |t, args|
+  desc [
+    "scaffolds the 'lib' directories and files for a new loomlib project",
+    "this task assumes (but does not enforce) it is the first to create these files",
+  ].join("\n")
+  task :lib => [:read_lib_name] do |t, args|
     context = template_context
 
     create_from_string(loomconfig_pathname('lib'), loomconfig_cli_contents)
@@ -330,7 +367,11 @@ namespace :new do
     create_from_template(sourcefile_pathname, sourcefile_template, context)
   end
 
-  task :test do |t, args|
+  desc [
+    "scaffolds the 'test' directories and files for a new loomlib project",
+    "this task assumes (but does not enforce) it is the first to create these files",
+  ].join("\n")
+  task :test => [:read_lib_name] do |t, args|
     name = "#{lib_name}Test"
 
     context = template_context
@@ -339,6 +380,11 @@ namespace :new do
     create_from_string(loombuild_pathname('test', name), loombuild_test_contents)
     create_from_template(lib_testapp_pathname, lib_testapp_template, context)
     create_from_template(lib_testspec_pathname, lib_testspec_template, context)
+  end
+
+
+  task :read_lib_name do |t, args|
+    @lib_name = read_lib_name()
   end
 
   task :scaffold => [:gitignore, :rakefile, :lib, :test, :cli, :gui, :docs]
