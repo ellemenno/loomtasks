@@ -67,6 +67,7 @@ Running `rake` in your project directory will execute the default task, which pr
     rake docs:build_site     # calls jekyll to [just] generate the docs site
     rake docs:gen_api        # creates api docs compatible with the programming pages template
     rake docs:serve_site     # calls jekyll to serve the docs site, without first building it
+    rake docs:watch_site     # calls jekyll to watch the docs and rebuild the site when files are changed
     rake gui                 # shorthand for 'rake gui:run'
     rake gui:build           # builds gui/bin/FooDemoGUI.loom for sprint34 SDK
     rake gui:run             # launches gui/bin/FooDemoGUI.loom as a GUI app
@@ -87,8 +88,8 @@ Running `rake` in your project directory will execute the default task, which pr
     rake test:run[seed]      # runs test/bin/FooTest.loom for the console
     rake test:sdk[id]        # sets the provided SDK version into test/loom.config
     rake version             # reports loomlib version
-    (using loomtasks 3.2.2)
-    (using lsdoc 2.0.0)
+    (using loomtasks 3.3.0)
+    (using lsdoc 2.1.0)
 
 If you are looking for more detail on any of the tasks, use `rake help`, e.g. `rake help test`.
 
@@ -119,8 +120,7 @@ The loomlib rake tasks make the following assumptions about the layout of a proj
 * the project uses a `Gemfile` for building and serving documentation locally with Jekyll and the Github Pages gem
 * source for a GUI demo is under `gui/`; the GUI demo app will consume the library and illustrate its use via a graphical user interface
 * the project uses a `Rakefile` for building, testing, and preparing releases
-* library test source is under `test/`; the test app will consume the library and exercise it
-* [spec-ls][spec-ls] is the supported testing framework
+* library test source is under `test/`; [spec-ls][spec-ls] is the supported testing framework
 
 #### documentation
 
